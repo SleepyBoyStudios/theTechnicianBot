@@ -242,28 +242,40 @@ async def update_stats():
         #Update exp to newVal in server, denoted by column, for user, denoted by row
         ws.update_cell(row, column, newVal)
 
+    #gets the value of the player's total xp
     col = ws.row_values(1).index('TOTALEN')+1
+    #instantiated the level object and strores it in levelCheck
     levelCheck = level(auth, ws.cell(row, col).value, bot)
+    #checks if teh player has leveled
     if levelCheck.has_leveled():
+        #if the player hasn leveled, it updates the rank in the excel sheet
         ws.update_cell(row, ws.row_values(1).index('Rank')+1, levelCheck.get_level())
+        #checks if new rank obtains a ~fancy~ role
         if levelCheck.get_level() in roleRanks:
+            #if so, calls add_rank_role() function
             await add_rank_role(levelCheck.get_level())
 
-#adds role to player
+
+#adds role 'Rank [num]: {name}' to player
 async def add_rank_role(rank):
     global auth, bot
+
+    #stores rank name in roleRank & get's all roles in a guild(server)
     roleName = f'Rank {rank}'
     guildRoles = bot.guilds[0].roles
+
+    #iterates through the roles
     for role in guildRoles:
+        #checks if the role exists
         if roleName in role.name:
+            #adds player to role
             await auth.add_roles(role, atomic=True)
 
-        try:
-            if guildRoles.index(role.name) == (len(guildRoles)-1):
-                await bot.create_role(auth.server, name=roleName)
-                await auth.add_roles(roles= roleName, atoic=True)
-        except Exception:
-            continue
+            #if role does not exist, checks if it is the last role of the list
+        elif guildRoles.index(role) == (len(guildRoles)-1):
+            await bot.create_role(auth.server, name=roleName)
+            await auth.add_roles(roles= roleName, atoic=True)
+
 
 #
 #————————————————————————————————————————INITIALIZATION————————————————————————————————————————
