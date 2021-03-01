@@ -44,7 +44,7 @@ roleRanks = [5, 10, 20, 30, 40, 50, 60, 70]
 row = -1
 
 #point increment
-increment = rd.randint(25, 50)
+increment = 0
 
 #cooldown between adding points
 cooldown = 60
@@ -129,7 +129,7 @@ async def on_ready():
 #Event that happens when a message is sent
 @bot.event
 async def on_message(message):
-    global auth, members
+    global auth, members, increment
     #Searches the members array, and if the author in one of the kinder objects, stops method.
     for kind in members:
         if kind.get_id() is auth:
@@ -139,6 +139,9 @@ async def on_message(message):
     if not str(message.author) in restrict:
         #Sets auth as the name of the person (DrDev#9289) as opposed to the object that message.author is
         auth = message.author
+
+        #randomizes increment on every message
+        increment = rd.randint(25, 50)
 
         #Console recognition of adding one point to user auth's exp
         print(f'added {increment} points to {auth}\n')
@@ -244,18 +247,23 @@ async def update_stats():
     if levelCheck.has_leveled():
         ws.update_cell(row, ws.row_values(1).index('Rank')+1, levelCheck.get_level())
         if levelCheck.get_level() in roleRanks:
-            await add_rank_role(level.get_level())
+            await add_rank_role(levelCheck.get_level())
+
 
 async def add_rank_role(rank):
     global auth, bot
     roleName = f'Rank {rank}'
-    for role in bot.guilds[0].roles:
+    guildRoles = bot.guilds[0].roles
+    for role in guildRoles:
         if roleName in role.name:
-            await bot.add_roles(auth, role.name)
+            await auth.add_role(role.name)
 
-        elif role.index(role.name) == (len(role)-1):
-            await bot.create_role(auth.server, name=roleName)
-            await bot.add_roles(auth, roleName)
+        try:
+            if guildRoles.index(role.name) == (len(guildRoles)-1):
+                await bot.create_role(auth.server, name=roleName)
+                await auth.add_roles(roleName)
+        except Exception:
+            continue
 
 #
 #————————————————————————————————————————INITIALIZATION————————————————————————————————————————
