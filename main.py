@@ -249,19 +249,19 @@ async def update_stats():
         if levelCheck.get_level() in roleRanks:
             await add_rank_role(levelCheck.get_level())
 
-
+#adds role to player
 async def add_rank_role(rank):
     global auth, bot
     roleName = f'Rank {rank}'
     guildRoles = bot.guilds[0].roles
     for role in guildRoles:
         if roleName in role.name:
-            await auth.add_role(role.name)
+            await auth.add_roles(role, atomic=True)
 
         try:
             if guildRoles.index(role.name) == (len(guildRoles)-1):
                 await bot.create_role(auth.server, name=roleName)
-                await auth.add_roles(roleName)
+                await auth.add_roles(roles= roleName, atoic=True)
         except Exception:
             continue
 
