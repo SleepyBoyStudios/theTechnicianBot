@@ -87,7 +87,7 @@ class level:
         if currentRank == 0:
             for i in self.auth.roles:
                 if 'Rank' in str(i.name):
-                    currentRank = int(i.name[index(' ')+1:index(':')])
+                    currentRank = int(i.name[(' ')+1:(':')])
                 while int(ln.getline(self.ref, currentRank+1)) <= self.xp:
                     currentRank+=1
         else:
@@ -254,7 +254,6 @@ async def update_stats(clear, auth):
         ws.update_cell(row, column, newVal)
         if clear == True:
             delCheck(row)
-            break
 
     #gets the value of the player's total xp
     col = ws.row_values(1).index('TOTALEN')+1
