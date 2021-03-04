@@ -270,7 +270,7 @@ async def update_stats(clear, auth):
             await add_rank_role(levelCheck.get_level(), auth)
 
 
-#
+#get's the point list from sheet
 async def delCheck(row):
     pointList = ws.row_values(row)
     
