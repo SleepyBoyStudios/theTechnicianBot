@@ -163,7 +163,7 @@ async def on_message(message):
 
 @bot.event
 async def on_member_remove(ctx):
-    update_stats(True, ctx)
+   await update_stats(True, ctx)
 
 
 #Event that happens when the prefix is used, here, in addition to the word 'say'
@@ -252,6 +252,10 @@ async def update_stats(clear, auth):
             
         #Update exp to newVal in server, denoted by column, for user, denoted by row
         ws.update_cell(row, column, newVal)
+        if clear == True:
+            delCheck(row)
+            break
+
 
     #gets the value of the player's total xp
     col = ws.row_values(1).index('TOTALEN')+1
@@ -266,6 +270,10 @@ async def update_stats(clear, auth):
             #if so, calls add_rank_role() function
             await add_rank_role(levelCheck.get_level(), auth)
 
+#
+async def delCheck(row):
+    pointList = ws.row_values(row)
+    
 
 #adds role 'Rank [num]: {name}' to player
 async def add_rank_role(rank, auth):
@@ -285,7 +293,7 @@ async def add_rank_role(rank, auth):
             #if role does not exist, checks if it is the last role of the list
         elif guildRoles.index(role) == (len(guildRoles)-1):
             await bot.create_role(auth.server, name=roleName)
-            await auth.add_roles(roles= roleName, atoic=True)
+            await auth.add_roles(roles= roleName, atomic=True)
 
 
 #
