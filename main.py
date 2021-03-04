@@ -157,9 +157,8 @@ async def on_message(message):
         #See corresponding method
         await update_stats(False, auth)
 
-        
-
     await bot.process_commands(message)
+
 
 @bot.event
 async def on_member_remove(ctx):
@@ -180,6 +179,7 @@ async def say(ctx, *, par):
     
     #Console confirmation of this command working
     print(f'{auth} told TheTechnician to say {par}\n')
+
 
 #
 #————————————————————————————————————————HELPER METHODS————————————————————————————————————————
@@ -256,7 +256,6 @@ async def update_stats(clear, auth):
             delCheck(row)
             break
 
-
     #gets the value of the player's total xp
     col = ws.row_values(1).index('TOTALEN')+1
     #instantiated the level object and strores it in levelCheck
@@ -269,6 +268,7 @@ async def update_stats(clear, auth):
         if levelCheck.get_level() in roleRanks:
             #if so, calls add_rank_role() function
             await add_rank_role(levelCheck.get_level(), auth)
+
 
 #
 async def delCheck(row):
