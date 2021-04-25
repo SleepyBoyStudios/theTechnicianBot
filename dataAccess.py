@@ -1,4 +1,11 @@
 #Data Storage
 import pandas as pd
 
-def 
+def addUser()
+
+def delUser()
+
+def editUser()
+
+#def loadData()
+#def saveData()
