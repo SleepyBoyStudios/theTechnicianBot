@@ -1,3 +1,7 @@
+#Check if user is allowed to gain EXP
+def denyCheck():
+    return True
+
 #This is the loop running in the second thread
 async def check_time():
     global members
