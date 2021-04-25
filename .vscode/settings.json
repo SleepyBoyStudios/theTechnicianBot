@@ -1,4 +1,4 @@
 {
-    "python.pythonPath": "usr/bin/python",
-    "python.linting.enabled": true
+    "python.linting.enabled": true,
+    "python.pythonPath": "/usr/local/opt/python@3.9/libexec/bin/python"
 }
