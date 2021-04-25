@@ -1,5 +1,7 @@
 # theTechnicianBot
-## **\*\*\*this be bot\*\*\***
+## **\*\*\*this be bot\*\*\*** 
+
+[![Build Status](https://www.travis-ci.com/DR2K/theTechnicianBot.svg?token=QwWz8Yssegwr1y7p23ma&branch=main)](https://www.travis-ci.com/DR2K/theTechnicianBot)
 
 ----
 
