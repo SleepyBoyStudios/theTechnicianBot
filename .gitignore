@@ -1,0 +1,7 @@
+poetry.lock
+pyproject.toml
+requirements.txt
+README.md
+__pycache__/
+.vscode/
+.vscode/settings.json
