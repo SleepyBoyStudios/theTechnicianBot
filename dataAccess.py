@@ -1,6 +1,6 @@
 #Data Storage
 import pandas as pd
-import constants as const
+from constants import CSV_NAME
 
 #constants
 
@@ -12,16 +12,28 @@ def add_user(id):
 
     print(df)
     #update csv file
-    df.to_csv(const.CSV_NAME, mode='a', index=False)
+    df.to_csv(CSV_NAME, mode='a', index=False)
 
-def del_user():
-    return
+def del_user(id):
+    df = pd.read_csv(CSV_NAME)
+
+    df = df.set_index("ID")
+    df.head()
+
+    df = df.drop(id)
+    print(df)
+
+    print("Dropping id: " + str(id) + "...")
+    df.to_csv(CSV_NAME, mode='w', index=False)
+    print("Done!\n")
+
+
 
 def edit_user():
     return
 
 def add_xp(id):
-    ids = pd.read_csv(const.CSV_NAME)["ID"].tolist()
+    ids = pd.read_csv(CSV_NAME)["ID"].tolist()
     if id in ids:
         #Add xp
         return
@@ -30,7 +42,7 @@ def add_xp(id):
         add_user(id)
 
 def grab_user_info(id):
-    df = pd.read_csv(const.CSV_NAME)
+    df = pd.read_csv(CSV_NAME)
 
     ids = df["ID"].tolist()
 
