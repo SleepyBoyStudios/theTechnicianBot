@@ -23,10 +23,10 @@ This bot by the end of it's development should have the core features of:
 
 ### Disclaimers & Technical Info
 
-**Language:** Python 3.9.4
-**Data storage type:** CSV on local storage
-**Runtime Environment:** [Repl.it](https://replit.com/)
-**Bot use platform:** Discord
+**Language:** Python 3.9.4  
+**Data storage type:** CSV on local storage  
+**Runtime Environment:** [Repl.it](https://replit.com/)  
+**Bot use platform:** Discord  
 
 *\*This bot is not to be used in any commercial access*
 *\*We are just 3 high schoolers don't judge us*
