@@ -20,10 +20,10 @@ bot = commands.Bot('>')
 
 @bot.event
 async def on_ready():
-    id = 684395467722850345
-    xp, time = da.grab_user_info(id)
+    user_id = 684395467722850345
+    xp, time = da.grab_user_info(user_id)
     if xp is type(int):
-        add_xp(id)
+        da.add_xp(user_id)
     print(xp, time)
 
 @bot.event
