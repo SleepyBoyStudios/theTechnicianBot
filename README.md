@@ -28,9 +28,9 @@ This bot by the end of it's development should have the core features of:
 **Runtime Environment:** [Repl.it](https://replit.com/)  
 **Bot use platform:** Discord  
 
-*\*This bot is not to be used in any commercial access*
-*\*We are just 3 high schoolers don't judge us*
-*\*I wonder how much time it's been since the last time we ever looked at this*
+*\*This bot is not to be used in any commercial access*  
+*\*We are just 3 high schoolers don't judge us*  
+*\*I wonder how much time it's been since the last time we ever looked at this*  
 
 ----
 
