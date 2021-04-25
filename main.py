@@ -1,6 +1,8 @@
 #————————————————————————————————————————LIBRARIES————————————————————————————————————————
 #for asynchronous actions (async def ...)
 import asyncio
+#discord API
+import discord
 #Interface with google sheets API
 import gspread
 #line buffer for file reading
@@ -85,7 +87,7 @@ class level:
         if currentRank == 0:
             for i in self.auth.roles:
                 if 'Rank' in str(i.name):
-                    currentRank = int(i.name[index(' ')+1:index(':')])
+                    currentRank = int(i.name[(' ')+1:(':')])
                 while int(ln.getline(self.ref, currentRank+1)) <= self.xp:
                     currentRank+=1
         else:
@@ -153,11 +155,15 @@ async def on_message(message):
         members.append(kinder(auth))
 
         #See corresponding method
-        await update_stats()
-
-        
+        await update_stats(False, auth)
 
     await bot.process_commands(message)
+
+
+@bot.event
+async def on_member_remove(ctx):
+   await update_stats(True, ctx)
+
 
 #Event that happens when the prefix is used, here, in addition to the word 'say'
 @bot.command()
@@ -173,6 +179,7 @@ async def say(ctx, *, par):
     
     #Console confirmation of this command working
     print(f'{auth} told TheTechnician to say {par}\n')
+
 
 #
 #————————————————————————————————————————HELPER METHODS————————————————————————————————————————
@@ -198,11 +205,12 @@ async def check_time():
         #Check every second (sleeps for one second)
         time.sleep(1)
 
+
 #Interface exp with google sheets
-async def update_stats():
+async def update_stats(clear, auth):
     #Pay attention, you bot.
     await bot.wait_until_ready()
-    global auth, ws, row, roleRanks, increment
+    global ws, row, roleRanks, increment
     
     #Find the name of the server the bot is in.
     serverName = bot.guilds[0].name
@@ -232,15 +240,20 @@ async def update_stats():
     else:
         #Grabs the location of the player's row. If done right, player never has more than one entry in the list
         row = cell_list[0].row
-        try:
-            #Grabs value already in cell, and adds {increment} to it.
-            newVal = int(ws.cell(row, column).value)+increment
-        except Exception:
-            #If no value in cell, the new value is {increment} (one message)
-            newVal = increment
-        
+        if clear == False:
+            try:
+                #Grabs value already in cell, and adds {increment} to it.
+                newVal = int(ws.cell(row, column).value)+increment
+            except Exception:
+                #If no value in cell, the new value is {increment} (one message)
+                newVal = increment
+        else:
+            newVal = 0
+            
         #Update exp to newVal in server, denoted by column, for user, denoted by row
         ws.update_cell(row, column, newVal)
+        if clear == True:
+            delCheck(row)
 
     #gets the value of the player's total xp
     col = ws.row_values(1).index('TOTALEN')+1
@@ -253,12 +266,17 @@ async def update_stats():
         #checks if new rank obtains a ~fancy~ role
         if levelCheck.get_level() in roleRanks:
             #if so, calls add_rank_role() function
-            await add_rank_role(levelCheck.get_level())
+            await add_rank_role(levelCheck.get_level(), auth)
 
+
+#get's the point list from sheet
+async def delCheck(row):
+    pointList = ws.row_values(row)
+    
 
 #adds role 'Rank [num]: {name}' to player
-async def add_rank_role(rank):
-    global auth, bot
+async def add_rank_role(rank, auth):
+    global bot
 
     #stores rank name in roleRank & get's all roles in a guild(server)
     roleName = f'Rank {rank}'
@@ -274,7 +292,7 @@ async def add_rank_role(rank):
             #if role does not exist, checks if it is the last role of the list
         elif guildRoles.index(role) == (len(guildRoles)-1):
             await bot.create_role(auth.server, name=roleName)
-            await auth.add_roles(roles= roleName, atoic=True)
+            await auth.add_roles(roles= roleName, atomic=True)
 
 
 #
