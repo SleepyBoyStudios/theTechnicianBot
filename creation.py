@@ -1,6 +1,6 @@
 #Data Storage
 import pandas as pd
-import constants as const
+from constants import CSV_NAME
 
 df=pd.DataFrame(columns = ['ID', 'XP', 'Time'])
 df = df.append({"ID" : 330075847799341076, "XP" : -1, "Time" : 100}, ignore_index=True)
@@ -10,7 +10,7 @@ df = df.append({"ID" : 684395467722850345, "XP" : 3425, "Time" : 103}, ignore_in
 
 #print(df)
 
-df.to_csv(const.CSV_NAME,mode='w', index=False) #mode='a' for append
+df.to_csv(CSV_NAME,mode='w', index=False) #mode='a' for append
 
 df=pd.DataFrame()
 
