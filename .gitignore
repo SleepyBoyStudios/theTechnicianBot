@@ -1,7 +1,8 @@
-poetry.lock
+OldStuff
+__pycache__
+data.csv
+.pytest_cache
+.vscode
+.poetry.lock
 pyproject.toml
-requirements.txt
-README.md
-__pycache__/
-.vscode/
 .vscode/settings.json
