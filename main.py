@@ -113,31 +113,29 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-    #global auth, members, increment
+    global restrict
 
     #Sets auth as the name of the person (DrDev#9289) as opposed to the object that message.author is
     auth = str(message.author)
-    #Searches the members array, and if the author in one of the kinder objects, stops method.
-    if(log.denyCheck(auth)):
+
+    #Check if message sender is allowed to accrue points
+    if(log.deny_check(auth, restrict)):
         return
-    
-    #Makes sure the bot can't give itself points
-    if not str(message.author) in restrict:
         
-        #randomizes increment on every message
-        increment = rd.randint(25, 50)
+    #randomizes increment on every message
+    increment = rd.randint(25, 50)
 
-        #Console recognition of adding one point to user auth's exp
-        print(f'added {increment} points to {auth}\n')
+    #Console recognition of adding one point to user auth's exp
+    print(f'added {increment} points to {auth}\n')
 
-        #Discord recognition of adding one point to user auth's exp
-        await message.channel.send(f"{increment} points added for {auth}")
+    #Discord recognition of adding one point to user auth's exp
+    await message.channel.send(f"{increment} points added for {auth}")
 
-        #Creates a kinder object to add to members list, with the user's name. "spam" protection.
-        members.append(kinder(auth))
+    #Creates a kinder object to add to members list, with the user's name. "spam" protection.
+    members.append(kinder(auth))
 
-        #See corresponding method
-        await update_stats(False, auth)
+    #See corresponding method
+    await update_stats(False, auth)
 
     await bot.process_commands(message)
 

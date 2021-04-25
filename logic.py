@@ -1,18 +1,16 @@
+import dataAccess as dA
+
 #Check if user is allowed to gain EXP
-def denyCheck():
-    return True
+def deny_check(auth, restrict):
+    if auth in restrict:
+        return True
+    else:
+        return check_time(auth)
 
 #This is the loop running in the second thread
-async def check_time():
-    global members
-    #Quality loop, I know
-    while(True):
-        #Checks all the objects in members list and if their time (in seconds) from creation is over 60, they're popped off the list.
-        for kind in members:
-            if (int(time.time()) - kind.get_time()) > cooldown:
-                members.pop()
-        #Check every second (sleeps for one second)
-        time.sleep(1)
+async def check_time(auth):
+    userData = dA.grabUser(auth)
+
 
 
 #Interface exp with google sheets
