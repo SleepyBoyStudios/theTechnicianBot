@@ -1,11 +1,16 @@
 #Data Storage
 import pandas as pd
 
-def addUser()
+def addUser():
+    return
 
-def delUser()
+def delUser():
+    return
 
-def editUser()
+def editUser():
+    return
 
+def grabUser(auth):
+    return
 #def loadData()
 #def saveData()
