@@ -11,7 +11,7 @@ For any answers needed: [help plz](https://stackoverflow.com/)
 ----
 
 ### Info:
-This Bot is supposed to be a replacement for the MEE6 premium bot with some added ***\~flavor\~***
+This Bot is supposed to be a replacement for the MEE6 premium bot's leveling functionality with some added ***\~flavor\~***
 
 
 This bot by the end of it's development should have the core features of:
