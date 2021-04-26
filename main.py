@@ -15,23 +15,29 @@ import pandas as pd
 import logic as lg
 #Access the user data
 import dataAccess as da
+import time
+
+restrict = []
 
 bot = commands.Bot('>')
 
 @bot.event
 async def on_ready():
-    user_id = 684395467722850345
-    xp, time = da.grab_user_info(user_id)
-    if xp is type(int):
-        da.add_xp(user_id)
-    print(xp, time)
-    #da.add_xp(user_id)
+    print("bot is oPeRAtiOnaL")
 
 @bot.event
 async def on_message(message):
+    global restrict
     if message.author == bot.user:
         return
+    
+    #Sets auth as the name of the person in ID form
+    auth = message.author.id
 
-
+    #Check if message sender is allowed to accrue points
+    if(lg.deny_check(auth, restrict)):
+        return
+    
+    da.add_xp(auth)
 
 bot.run(config('TOKEN'))
