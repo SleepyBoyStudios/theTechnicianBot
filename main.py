@@ -25,7 +25,7 @@ async def on_ready():
     if xp is type(int):
         da.add_xp(user_id)
     print(xp, time)
-    da.del_user(user_id)
+    #da.add_xp(user_id)
 
 @bot.event
 async def on_message(message):
