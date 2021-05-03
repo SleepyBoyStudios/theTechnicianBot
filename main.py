@@ -19,16 +19,20 @@ import time
 
 restrict = []
 
-bot = commands.Bot('>')
+bot = commands.Bot('>') #Initializes bot with '>' prefix
 
+
+#On bot startup...
 @bot.event
 async def on_ready():
     print("bot is oPeRAtiOnaL")
 
+
+#On each message...
 @bot.event
 async def on_message(message):
     global restrict
-    if message.author == bot.user:
+    if (message.author == bot.user) or (message.author in restrict): #Check if the user is the bot or is in the restrict list 
         return
     
     #Sets auth as the name of the person in ID form
@@ -39,5 +43,44 @@ async def on_message(message):
         return
     
     da.add_xp(auth)
+
+#--------------------------------------------------------------------------COMMANDS---------------------------------------------------------------------------------------------------
+
+#Adds player to restrict list
+@bot.command
+async def restrictPlayer(auth):
+    return
+
+
+#Removes player from restrict list
+@bot.command
+async def unrestrictPlayer(auth):
+    return
+
+
+#Adds xp to a player
+@bot.command
+async def addXp(auth):
+    return
+
+
+#Removes xp from a player
+@bot.command
+async def removeXp(auth):
+    return
+
+
+#Prints out the DataFrame
+@bot.command
+async def printdf():
+    return
+
+
+#Prints out the CSV
+@bot.command
+async def printcsv():
+    return
+
+
 
 bot.run(config('TOKEN'))
