@@ -49,17 +49,17 @@ def add_user(id):
     print("Done!\n")
 
 
-
+#Deletes a user from the DataFrame and CSV
 def del_user(id):
     global df
 
-    df = df.set_index("ID")
+    df = df.set_index("ID") #Sets the Index as the ID variable
     df.head()
 
-    df = df.drop(id)
+    df = df.drop(id) #Drops the row containing the id in 'id'
 
     print("Dropping id: " + str(id) + "... ")
-    save_data(df)
+    save_data(df) #Drops id in CSV
     print("Done!\n")
 
 
