@@ -48,13 +48,13 @@ async def on_message(message):
 
 #Adds player to restrict list
 @bot.command
-async def restrictPlayer(auth):
+async def restrict(auth):
     return
 
 
 #Removes player from restrict list
 @bot.command
-async def unrestrictPlayer(auth):
+async def unrestrict(auth):
     return
 
 
@@ -72,13 +72,13 @@ async def removeXp(auth):
 
 #Prints out the DataFrame
 @bot.command
-async def printdf():
+async def df():
     return
 
 
 #Prints out the CSV
 @bot.command
-async def printcsv():
+async def csv():
     return
 
 
