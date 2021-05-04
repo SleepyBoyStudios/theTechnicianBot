@@ -1,3 +1,4 @@
+.gitignore
 OldStuff
 __pycache__
 data.csv
@@ -6,3 +7,5 @@ data.csv
 .poetry.lock
 pyproject.toml
 .vscode/settings.json
+test.py
+levelVals.txt
