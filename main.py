@@ -1,5 +1,6 @@
 # for running bot using token see: "bot.run(config('TOKEN'))"
 from decouple import config
+# import discord API
 import discord
 # For all bot commands used and all data from discord API
 from discord.ext import commands
