@@ -91,7 +91,7 @@ def add_xp(id):
     save_data(df)
 
 
-#TODO: level upgrading
+# level upgrading
 def add_lvl(id, amount):
     global df
 
@@ -110,7 +110,7 @@ def add_lvl(id, amount):
     save_data(df)
 
 
-#TODO: removing levels (adjust xp accordingly?)
+# removing levels (adjusts xp accordingly)
 def remove_lvl(id, amount):
     global df
 
@@ -129,7 +129,7 @@ def remove_lvl(id, amount):
     save_data(df)
 
 
-#TODO: clear all levels (including xp)
+# clear all levels (including xp)
 def clear_lvl():
     global df
 
@@ -139,7 +139,6 @@ def clear_lvl():
     df["Lvl"] = df["Lvl"].replace(to_replace=user_lvl, value=lvl)
 
     xp = 0
-
     df["XP"] = df["XP"].replace(to_replace=user_xp, value=xp)
 
     __set_time(user_time)

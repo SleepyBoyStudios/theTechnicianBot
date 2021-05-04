@@ -58,37 +58,37 @@ async def add_xp(auth):
     return
 
 
-# Removes xp from a player
+#TODO: Removes xp from a player
 @bot.command
 async def remove_xp(auth):
     return
 
 
-# Level up player
+#TODO: Level up player
 @bot.command
 async def lvl_up(auth):
     return
 
 
-# Level down a player
+#TODO: Level down a player
 @bot.command
 async def lvl_down(auth):
     return
 
 
-# Level a player to a rank
+#TODO: Level a player to a rank
 @bot.command
 async def lvl_to(auth, rank):
     return
 
 
-# Prints out the DataFrame
+#TODO: Prints out the DataFrame
 @bot.command
 async def df():
     return
 
 
-# Prints out the CSV
+#TODO: Prints out the CSV
 @bot.command
 async def csv():
     return
