@@ -54,31 +54,37 @@ async def unrestrict(auth):
 
 # Adds xp to a player
 @bot.command
-async def add_xp(auth):
+async def addXp(auth, amount):
     return
 
 
 #TODO: Removes xp from a player
 @bot.command
-async def remove_xp(auth):
+async def removeXp(auth, amount):
     return
 
+
+#TODO: Clears all xp from a player
+@bot.command
+async def clearXp(auth):
+    return
 
 #TODO: Level up player
 @bot.command
-async def lvl_up(auth):
+async def lvlUp(auth):
     return
+
 
 
 #TODO: Level down a player
 @bot.command
-async def lvl_down(auth):
+async def lvlDown(auth):
     return
 
 
 #TODO: Level a player to a rank
 @bot.command
-async def lvl_to(auth, rank):
+async def lvlTo(auth, rank):
     return
 
 
