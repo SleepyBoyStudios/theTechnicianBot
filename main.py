@@ -44,7 +44,9 @@ async def on_message(message):
     
     da.add_xp(auth)
 
-#--------------------------------------------------------------------------COMMANDS---------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------- COMMANDS --------------------------------------------------------------------------
+
+#--------------------------- ADMIN ONLY ---------------------------
 
 #Adds player to restrict list
 @bot.command
@@ -70,6 +72,24 @@ async def removeXp(auth):
     return
 
 
+#Level up player
+@bot.command
+async def lvlUp(auth):
+    return
+
+
+#Level down a player
+@bot.command
+async def lvlDown(auth):
+    return
+
+
+#Level a player to a rank
+@bot.command
+async def lvlTo(auth, rank):
+    return
+
+
 #Prints out the DataFrame
 @bot.command
 async def df():
@@ -81,6 +101,7 @@ async def df():
 async def csv():
     return
 
+#--------------------------- GENERAL ---------------------------
 
-
+#makes sure bot runs with the token from the .env file
 bot.run(config('TOKEN'))
