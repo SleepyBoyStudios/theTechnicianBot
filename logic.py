@@ -25,12 +25,12 @@ def check_time(id):
 
 
 # Checks rank of user and ranks up (REQUIRES AUTH OBJECT NOT JUST ID)
-def check_rank(auth):
+def check_rank(auth, member=None):
     user_xp, user_time, user_lvl = da.grab_user_info(auth.id)
 
     role_list = list(RANK_DICT.keys())
 
-    user_role_list = auth.Member.roles
+    user_role_list = member.roles
 
     similar_roles = list(set(role_list).intersection(set(user_role_list)))
     
@@ -51,18 +51,18 @@ def check_rank(auth):
     if RANK_DICT[rank] + 1 <= user_lvl:
         index = RANK_DICT[rank].index + 1
 
-        promote(auth, role_list[index])
+        promote(member, role_list[index])
 
         return role_list[index], True
     
     return rank, False
 
 
-# Adds rank to user (REQUIRES AUTH OBJECT NOT JUST ID)
-def promote(auth, role):
-    auth.Member.add_roles(str(role))
+# Adds rank to user (REQUIRES MEMBER OBJECT NOT JUST ID)
+def promote(member, role):
+    member.add_roles(str(role))
 
 
-# Removes rank to user (REQUIRES AUTH OBJECT NOT JUST ID)
-def demote(auth, role):
-    auth.Member.remove_roles(str(role))
+# Removes rank to user (REQUIRES MEMBER OBJECT NOT JUST ID)
+def demote(member, role):
+    member.remove_roles(str(role))
