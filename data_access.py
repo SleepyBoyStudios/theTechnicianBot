@@ -25,6 +25,11 @@ df = load_data()
 lvls = load_lvls()
 
 
+# returns dataframe
+def load_dataframe():
+    return df
+
+
 #Sets the time in the DataFrame
 def __set_time(user_time):
     global df

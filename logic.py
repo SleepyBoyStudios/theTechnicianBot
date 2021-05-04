@@ -24,6 +24,11 @@ def check_time(id):
         return False
 
 
+
+def lvl_to(id, lvl):
+    return
+
+
 # Checks rank of user and ranks up (REQUIRES AUTH OBJECT NOT JUST ID)
 def check_rank(auth, member=None):
     user_xp, user_time, user_lvl = da.grab_user_info(auth.id)

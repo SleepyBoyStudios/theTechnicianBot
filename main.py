@@ -1,5 +1,6 @@
 # for running bot using token see: "bot.run(config('TOKEN'))"
 from decouple import config
+import discord
 # For all bot commands used and all data from discord API
 from discord.ext import commands
 # Import other files
@@ -48,62 +49,62 @@ async def on_message(message):
 
 #TODO: Adds player to restrict list
 @bot.command
-async def restrict(auth):
-    return
+async def restrict (user):
+    restrict.push(user)
 
 
 #TODO: Removes player from restrict list
 @bot.command
-async def unrestrict(auth):
-    return
+async def unrestrict(user):
+    restrict.pop(user)
 
 
 #TODO: Adds xp to a player
 @bot.command
-async def addXp(auth, amount):
-    return
+async def addXp(user, amount):
+    da.add_xp(amount)
 
 
 #TODO: Removes xp from a player
 @bot.command
-async def removeXp(auth, amount):
-    return
+async def removeXp(user, amount):
+    da.add_xp(-amount)
 
 
 #TODO: Clears all xp from a player
 @bot.command
-async def clearXp(auth):
-    return
+async def clearXp(user):
+    da.clear_lvl(user)
 
 
 #TODO: Level up player
 @bot.command
-async def lvlUp(auth):
-    return
+async def lvlUp(user):
+    da.add_lvl(user)
 
 
 #TODO: Level down a player
 @bot.command
-async def lvlDown(auth):
-    return
+async def lvlDown(user):
+    da.remove_lvl()
 
 
-#TODO: Level a player to a rank
+#TODO: Level a player to a lvl
 @bot.command
-async def lvlTo(auth, rank):
-    return
+async def lvlTo(user, lvl):
+    lg.lvl_to(user, lvl)
 
 
 #TODO: Prints out the DataFrame
 @bot.command
 async def df():
-    return
+    return da.load_dataframe()
 
 
 #TODO: Prints out the CSV
 @bot.command
 async def csv():
-    return
+    return da.load_data()
 
 
 # --------------------------- GENERAL ---------------------------
