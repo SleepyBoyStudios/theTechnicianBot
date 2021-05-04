@@ -16,7 +16,7 @@ def check_time(auth):
         da.add_user(auth)
         return False
 
-    user_xp, user_time = da.grab_user_info(auth)
+    user_xp, user_time, user_lvl = da.grab_user_info(auth)
     if time.time() - int(user_time) <= 60:
         return True
     else:
