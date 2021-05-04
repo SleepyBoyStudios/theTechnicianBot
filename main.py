@@ -23,17 +23,17 @@ async def on_ready():
 async def on_message(message):
     global restrict
     # Check if the user is the bot or is in the restrict list
-    if (message.author == bot.user) or (message.author in restrict):
+    if (message.author == bot.user) or (message.author.id in restrict):
         return
 
     # Sets auth as the name of the person in ID form
-    auth = message.author.id
+    auth = message.author
 
     # Check if message sender is allowed to accrue points
-    if lg.deny_check(auth, restrict):
+    if lg.deny_check(auth.id, restrict):
         return
-
-    da.add_xp(auth)
+    
+    da.add_xp(auth.id)
 
 
 # ------------------------------------------------------ COMMANDS ------------------------------------------------------

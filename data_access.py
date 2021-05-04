@@ -31,11 +31,11 @@ def __set_time(user_time):
     df["Time"] = df["Time"].replace(to_replace=user_time, value=int(time.time()))
 
 
-# Checks if the id {auth} exists
-def id_exists(auth):
+# Checks if the id {id} exists
+def id_exists(id):
     global df
 
-    id_index = df['ID'] == auth  # gets id index from DataFrame and stores it in the variable 'id_index'
+    id_index = df['ID'] == id  # gets id index from DataFrame and stores it in the variable 'id_index'
 
     if len(df.loc[id_index]) != 0:  # If length of the id != 0 (df.loc() is to locate)
         return True
@@ -130,7 +130,7 @@ def remove_lvl(id, amount):
 
 
 # clear all levels (including xp)
-def clear_lvl():
+def clear_lvl(id):
     global df
 
     user_xp, user_time, user_lvl =  grab_user_info(id)
