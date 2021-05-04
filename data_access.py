@@ -15,7 +15,7 @@ def save_data(new_df, m='w'):
     new_df.to_csv(CSV_NAME, mode=m, index=False)
 
 
-
+# Loads levels from CSV
 def load_lvls():
     return pd.read_csv(LVL_LIST, sep="\n", header=None)
 

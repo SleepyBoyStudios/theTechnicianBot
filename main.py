@@ -16,6 +16,7 @@ server = None
 
 bot = commands.Bot('>')  # Initializes bot with '>' prefix
 
+# ------------------------------------------------------ BUILT IN METHODS ------------------------------------------------------
 
 # On bot startup...
 @bot.event
@@ -108,6 +109,10 @@ async def csv():
 
 
 # --------------------------- GENERAL ---------------------------
+
+
+
+# ------------------------------------------------------ BOT SETUP ------------------------------------------------------
 
 # makes sure bot runs with the token from the .env file
 bot.run(config('TOKEN'))
