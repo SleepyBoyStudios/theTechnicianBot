@@ -1,1 +1,1 @@
-CSV_NAME='data.csv'
+CSV_NAME = 'data.csv'

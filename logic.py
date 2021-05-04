@@ -1,8 +1,8 @@
-import dataAccess as da
+import data_access as da  # data access API
 import time
 
 
-#Check if user is allowed to gain EXP
+# Check if user is allowed to gain EXP
 def deny_check(auth, restrict):
     if auth in restrict:
         return True
@@ -10,10 +10,9 @@ def deny_check(auth, restrict):
         return check_time(auth)
 
 
-
-#Check Time
+# Check Time
 def check_time(auth):
-    if da.id_exists(auth) == False:
+    if not da.id_exists(auth):
         da.add_user(auth)
         return False
 
