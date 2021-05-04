@@ -1,0 +1,8 @@
+OldStuff
+__pycache__
+data.csv
+.pytest_cache
+.vscode
+.poetry.lock
+pyproject.toml
+.vscode/settings.json
