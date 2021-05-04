@@ -40,19 +40,19 @@ async def on_message(message):
 
 # --------------------------- ADMIN ONLY ---------------------------
 
-# Adds player to restrict list
+#TODO: Adds player to restrict list
 @bot.command
 async def restrict(auth):
     return
 
 
-# Removes player from restrict list
+#TODO: Removes player from restrict list
 @bot.command
 async def unrestrict(auth):
     return
 
 
-# Adds xp to a player
+#TODO: Adds xp to a player
 @bot.command
 async def addXp(auth, amount):
     return
@@ -69,11 +69,11 @@ async def removeXp(auth, amount):
 async def clearXp(auth):
     return
 
+
 #TODO: Level up player
 @bot.command
 async def lvlUp(auth):
     return
-
 
 
 #TODO: Level down a player
