@@ -7,7 +7,11 @@ import logic as lg
 # Access the user data
 import data_access as da
 
+#globals
 restrict = []
+member = None
+auth = None
+server = None
 
 bot = commands.Bot('>')  # Initializes bot with '>' prefix
 
@@ -21,13 +25,15 @@ async def on_ready():
 # On each message...
 @bot.event
 async def on_message(message):
-    global restrict
+    global restrict, auth, member, server
     # Check if the user is the bot or is in the restrict list
     if (message.author == bot.user) or (message.author.id in restrict):
         return
 
-    # Sets auth as the name of the person in ID form
+    # Set globals
+    member = message
     auth = message.author
+    server = message.guild
 
     # Check if message sender is allowed to accrue points
     if lg.deny_check(auth.id, restrict):
