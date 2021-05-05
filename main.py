@@ -29,8 +29,12 @@ async def on_ready():
 @bot.event
 async def on_message(message):
     global restrict, auth, member, server
+
+    if message.bot:
+        return
+
     # Check if the user is the bot or is in the restrict list
-    if (message.author == bot.user) or (message.author.id in restrict):
+    if message.author.id in restrict:
         return
 
     # Set globals
