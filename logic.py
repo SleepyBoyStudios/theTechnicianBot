@@ -1,7 +1,6 @@
 import data_access as da  # data access API
 import time
 from constants import RANK_DICT
-import discord
 
 # Check if user is allowed to gain EXP
 def deny_check(id, restrict):
