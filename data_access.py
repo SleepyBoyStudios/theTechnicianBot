@@ -36,6 +36,17 @@ def __set_time(user_time):
     df["Time"] = df["Time"].replace(to_replace=user_time, value=int(time.time()))
 
 
+#TODO: Calculates total xp
+def calc_xp(id):
+    global df
+
+    user_xp, user_time, user_lvl = grab_user_info(id)
+
+    xp = sum(user_xp.values())
+
+    return xp
+
+
 # Checks if the id {id} exists
 def id_exists(id):
     global df
@@ -81,12 +92,13 @@ def del_user(id):
 
 
 # move if statement to logic.py and keep XP update here
-def add_xp(id):
+def add_xp(id, server):
     global df
 
     user_xp, user_time, user_lvl = grab_user_info(id)
 
-    xp = user_xp + rd.randint(25, 50)
+    xp = user_xp.set(server, user_xp.get(server) + rd.randint(25, 50))
+
     df["XP"] = df["XP"].replace(to_replace=user_xp, value=xp)
 
     __set_time(user_time)
@@ -105,17 +117,13 @@ def add_lvl(id, amount):
     lvl = user_lvl + amount
     df["Lvl"] = df["Lvl"].replace(to_replace=user_lvl, value=lvl)
 
-    xp = lvls.loc[lvl]
-
-    df["XP"] = df["XP"].replace(to_replace=user_xp, value=int(xp))
-
     __set_time(user_time)
 
     print("Level added and saved")
     save_data(df)
 
 
-# removing levels (adjusts xp accordingly)
+#TODO: removing levels (adjusts xp accordingly) ASK ABOUT HOW TO REMOVE LEVELS
 def remove_lvl(id, amount):
     global df
 
@@ -143,7 +151,7 @@ def clear_lvl(id):
     lvl = 0
     df["Lvl"] = df["Lvl"].replace(to_replace=user_lvl, value=lvl)
 
-    xp = 0
+    xp = user_xp.fromkeys(user_xp.iterkeys(), 0)
     df["XP"] = df["XP"].replace(to_replace=user_xp, value=xp)
 
     __set_time(user_time)
