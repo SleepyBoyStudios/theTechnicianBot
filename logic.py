@@ -24,7 +24,7 @@ def check_time(id):
         return False
 
 
-
+#TODO: Level to a lvl
 def lvl_to(id, lvl):
     return
 
@@ -40,8 +40,8 @@ def check_rank(auth, member=None):
     similar_roles = list(set(role_list).intersection(set(user_role_list)))
     
     if similar_roles != []:
-        highest_rank = 0
-        index = 0
+        highest_rank = -1
+        index = -1
         for _ in similar_roles:
             rank = int((similar_roles[_])[5:6])
             if rank > highest_rank:
