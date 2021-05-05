@@ -6,4 +6,3 @@ __pycache__
 pyproject.toml
 .vscode/settings.json
 test.py
-levelVals.txt
