@@ -4,7 +4,7 @@ from constants import RANK_DICT
 
 # Check if user is allowed to gain EXP
 def deny_check(id, restrict):
-    if id in restrict:
+    if int(id) in restrict:
         return True
     else:
         return check_time(id)

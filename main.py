@@ -30,15 +30,14 @@ async def on_ready():
 async def on_message(message):
     global restrict, auth, member, server
 
-    if message.bot:
-        return
+    #if message.bot:
+    #    return
 
-    # Check if the user is the bot or is in the restrict list
-    if message.author.id in restrict:
-        return
-
+    #TODO: Check if the user is the bot or is in the restrict list BROKEN
+    #if (message.author.id == bot.user.id) or (message.author.id in restrict):
+    #    return
     # Set globals
-    member = message
+    member = await bot.fetch_user(message.author.id)
     auth = message.author
     server = message.guild
 
