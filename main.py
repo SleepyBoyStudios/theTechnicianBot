@@ -22,7 +22,7 @@ from discord.ext import commands
 #————————————————————————————————————————GLOBAL VARIABLES————————————————————————————————————————
 #
 
-restrict = ['TheTechnician#2981', 'C.J.#8161']
+restrict = ['TheTechnician#2981']
 
 #Prefix for commands in discord
 pre = '>'
