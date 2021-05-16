@@ -32,6 +32,7 @@ async def on_ready():
 async def on_message(message):
     global restrict, auth, member, server
 
+
     #if message.bot:
     #    return
 
@@ -41,13 +42,14 @@ async def on_message(message):
     # Set globals
     member = await bot.fetch_user(message.author.id)
     auth = message.author
-    server = message.guild
+    server = message.guild.id
+    print(type(server))
 
     # Check if message sender is allowed to accrue points
     if lg.deny_check(auth.id, restrict):
         return
     
-    da.add_xp(auth.id)
+    da.add_xp(auth.id, server)
 
 
 # ------------------------------------------------------ COMMANDS ------------------------------------------------------
@@ -56,7 +58,7 @@ async def on_message(message):
 
 #TODO: Adds player to restrict list
 @bot.command
-async def restrict (user):
+async def rest(user):
     restrict.push(user)
 
 
