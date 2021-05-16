@@ -1,3 +1,4 @@
+.gitignore
 OldStuff
 __pycache__
 .pytest_cache
@@ -6,3 +7,7 @@ __pycache__
 pyproject.toml
 .vscode/settings.json
 test.py
+.history
+.idea
+venv
+.github

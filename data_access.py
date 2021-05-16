@@ -67,7 +67,7 @@ def add_user(id):
 
     print("\n" + str(data) + "\n")
 
-    df = df.append(data, ignore_index=True)  # append temp DataFrame to gloabal DataFrame
+    df = df.append(data, ignore_index=True)  # append temp DataFrame to global DataFrame
     df = df.head()
 
     print(str(df.head()) + "\n")
