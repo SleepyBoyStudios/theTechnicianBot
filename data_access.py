@@ -93,13 +93,13 @@ def del_user(id):
 
 
 # move if statement to logic.py and keep XP update here
-def add_xp(id, server):
+def add_xp(id, server, amount=0):
     global df
 
     user_xp, user_time, user_lvl = grab_user_info(id)
 
     xp = user_xp.copy()
-    xp[str(server)] = (user_xp.get(str(server)) + rd.randint(25, 50))
+    xp[str(server)] = (user_xp.get(str(server)) + amount if amount != 0 else rd.randint(25, 50))
 
     df["XP"] = df["XP"].replace(to_replace=str(user_xp), value=str(xp))
 
@@ -112,12 +112,26 @@ def add_xp(id, server):
 
 # level upgrading
 def add_lvl(id, amount):
-    global df
+    global df, lvls
 
     user_xp, user_time, user_lvl =  grab_user_info(id)
 
     lvl = user_lvl + amount
     df["Lvl"] = df["Lvl"].replace(to_replace=user_lvl, value=lvl)
+
+    lvl_xp = int(lvls.loc[int(lvl) + 1, 0].replace(",",""))
+    print(lvl_xp, type(lvl_xp))
+
+    server_amount = len(user_xp.keys())
+
+    for _ in range(server_amount):
+        x = lvl_xp//(server_amount)
+        print(x, server_amount, lvl_xp)
+        add_xp(str(id), list(user_xp.keys())[_], x)
+
+    if(lvl_xp % server_amount != 0):
+        for _ in range(server_amount):
+            add_xp(str(id), list(user_xp.keys())[_], 1)
 
     __set_time(user_time)
 

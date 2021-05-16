@@ -46,10 +46,11 @@ async def on_message(message):
     print(type(server))
 
     # Check if message sender is allowed to accrue points
-    if lg.deny_check(auth.id, restrict):
-        return
+    #if lg.deny_check(auth.id, restrict):
+    #    return
     
     da.add_xp(auth.id, server)
+    da.add_lvl(auth.id, 1)
 
 
 # ------------------------------------------------------ COMMANDS ------------------------------------------------------
