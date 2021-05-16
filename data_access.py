@@ -3,6 +3,7 @@ import pandas as pd  # Database Library
 from constants import CSV_NAME, LVL_LIST  # Imports constants from 'constants.py'
 import random as rd  # Random Library
 import time  # Time Library
+import json # conversion of string to dict
 
 
 # Loads from CSV
@@ -63,7 +64,7 @@ def id_exists(id):
 # Adds user to the DataFrame and to the csv
 def add_user(id):
     global df
-    data = {"ID": int(id), "XP": int(0), "Time": int(0)}  # Temporary 1 item DataFrame stored in 'data'
+    data = {"ID": str(id), "XP": int(0), "Time": int(0)}  # Temporary 1 item DataFrame stored in 'data'
 
     print("\n" + str(data) + "\n")
 
@@ -97,9 +98,10 @@ def add_xp(id, server):
 
     user_xp, user_time, user_lvl = grab_user_info(id)
 
-    xp = user_xp.set(server, user_xp.get(server) + rd.randint(25, 50))
+    xp = user_xp.copy()
+    xp[str(server)] = (user_xp.get(str(server)) + rd.randint(25, 50))
 
-    df["XP"] = df["XP"].replace(to_replace=user_xp, value=xp)
+    df["XP"] = df["XP"].replace(to_replace=str(user_xp), value=str(xp))
 
     __set_time(user_time)
 
@@ -164,6 +166,9 @@ def clear_lvl(id):
 def grab_user_info(id):
     global df
 
-    ids = df["ID"].tolist()
+    ids = [str(x) for x in df["ID"].tolist()]
 
-    return df["XP"].tolist()[ids.index(id)], df["Time"].tolist()[ids.index(id)], df["Lvl"].tolist()[ids.index(id)]
+    xpStr = df["XP"][ids.index(str(id))]
+    print(xpStr.replace("\'", '\"'))
+    xpDict = json.loads(xpStr.replace("\'", '\"'))
+    return xpDict, df["Time"].tolist()[ids.index(str(id))], df["Lvl"].tolist()[ids.index(str(id))]
