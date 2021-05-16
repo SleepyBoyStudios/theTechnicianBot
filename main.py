@@ -8,6 +8,8 @@ from discord.ext import commands
 import logic as lg
 # Access the user data
 import data_access as da
+# Import constants
+
 
 #globals
 restrict = []

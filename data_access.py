@@ -127,7 +127,7 @@ def add_lvl(id, amount):
 def remove_lvl(id, amount):
     global df
 
-    user_xp, user_time, user_lvl =  grab_user_info(id)
+    user_xp, user_time, user_lvl = grab_user_info(id)
 
     lvl = user_lvl - amount
     df["Lvl"] = df["Lvl"].replace(to_replace=user_lvl, value=lvl)
@@ -146,7 +146,7 @@ def remove_lvl(id, amount):
 def clear_lvl(id):
     global df
 
-    user_xp, user_time, user_lvl =  grab_user_info(id)
+    user_xp, user_time, user_lvl = grab_user_info(id)
 
     lvl = 0
     df["Lvl"] = df["Lvl"].replace(to_replace=user_lvl, value=lvl)
