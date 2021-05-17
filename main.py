@@ -6,12 +6,10 @@ from discord.ext import commands
 import logic as lg
 # Access the user data
 import data_access as da
+import json
 
 # Import constants
 
-
-# globals
-restrict = []
 
 bot = commands.Bot('>')  # Initializes bot with '>' prefix
 
@@ -27,20 +25,15 @@ async def on_ready():
 # On each message...
 @bot.event
 async def on_message(message):
-    global restrict
 
-    if message.author.bot:
-        return
-
-    if message.author.id in restrict:
-        return
     # Set locals
-    member = await bot.fetch_user(message.author.id)
+    restrict = da.grab_restricted_list()
+    #member = await bot.fetch_user(message.author.id)
     auth = message.author
     server = message.guild.id
 
     # Check if message sender is allowed to accrue points
-    if lg.deny_check(auth.id, restrict):
+    if lg.deny_check(auth, restrict):
         return
 
     da.add_xp(auth.id, server)
@@ -54,15 +47,23 @@ async def on_message(message):
 # --------------------------- ADMIN ONLY ---------------------------
 
 # TODO: Adds player to restrict list
-@bot.command
-async def rest(user):
-    restrict.push(user)
+@bot.command(pass_context=True)
+async def rest(ctx, user):
+    restrict = da.grab_restricted_list()
+    restrict.append(user)
+    da.store_restricted_list(restrict)
 
 
 # TODO: Removes player from restrict list
-@bot.command
-async def unrestrict(user):
-    restrict.pop(user)
+@bot.command(pass_context=True)
+async def unrestrict(ctx, user):
+    restrict = da.grab_restricted_list()
+    try:
+        restrict.remove(user.id)
+        da.store_restricted_list(restrict)
+    except:
+        ctx.send("That user is not on the restricted list!")
+
 
 
 # TODO: Adds xp to a player
