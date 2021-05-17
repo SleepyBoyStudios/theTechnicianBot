@@ -21,6 +21,16 @@ def load_lvls():
     return pd.read_csv(LVL_LIST, sep="\n", header=None)
 
 
+def grab_restricted_list():
+    with open('restricted.json') as file:
+        return json.load(file)
+
+
+def store_restricted_list(list):
+    with open('restricted.json','w') as file:
+        json.dump(list, indent=4, fp=file)
+
+
 # Globals
 df = load_data()
 lvls = load_lvls()
@@ -188,11 +198,4 @@ def grab_user_info(user):
     return xpDict, df["Time"].tolist()[ids.index(str(user))], df["Lvl"].tolist()[ids.index(str(user))]
 
 
-def grab_restricted_list():
-    with open('restricted.json') as file:
-        return json.load(file)
 
-
-def store_restricted_list(list):
-    with open('restricted.json','w') as file:
-        json.dump(list, indent=4, fp=file)
