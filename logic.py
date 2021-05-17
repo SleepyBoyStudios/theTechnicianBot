@@ -2,9 +2,9 @@ import data_access as da  # data access API
 import time
 from constants import RANK_DICT
 
+
 # Check if user is allowed to gain EXP
 def deny_check(id, restrict=[]):
-        
     if int(id) in restrict:
         return True
     else:
@@ -24,7 +24,7 @@ def check_time(id):
         return False
 
 
-#TODO: Level to a lvl
+# TODO: Level to a lvl
 def lvl_to(id, lvl):
     return
 
@@ -38,7 +38,7 @@ def check_rank(auth, member=None):
     user_role_list = member.roles
 
     similar_roles = list(set(role_list).intersection(set(user_role_list)))
-    
+
     if similar_roles != []:
         highest_rank = -1
         index = -1
@@ -49,7 +49,7 @@ def check_rank(auth, member=None):
                 index = _
 
     else:
-        return None, False # returns the highest rank and if they ranked up (str, bool)
+        return None, False  # returns the highest rank and if they ranked up (str, bool)
 
     rank = similar_roles[index]
 
@@ -59,7 +59,7 @@ def check_rank(auth, member=None):
         promote(member, role_list[index])
 
         return role_list[index], True
-    
+
     return rank, False
 
 
