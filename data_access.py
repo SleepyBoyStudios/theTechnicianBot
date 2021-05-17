@@ -3,7 +3,7 @@ import pandas as pd  # Database Library
 from constants import CSV_NAME, LVL_LIST  # Imports constants from 'constants.py'
 import random as rd  # Random Library
 import time  # Time Library
-import json # conversion of string to dict
+import json  # conversion of string to dict
 
 
 # Loads from CSV
@@ -31,13 +31,13 @@ def load_dataframe():
     return df
 
 
-#Sets the time in the DataFrame
+# Sets the time in the DataFrame
 def __set_time(user_time):
     global df
     df["Time"] = df["Time"].replace(to_replace=user_time, value=int(time.time()))
 
 
-#TODO: Calculates total xp
+# TODO: Calculates total xp
 def calc_xp(id):
     global df
 
@@ -114,22 +114,22 @@ def add_xp(id, server, amount=0):
 def add_lvl(id, amount):
     global df, lvls
 
-    user_xp, user_time, user_lvl =  grab_user_info(id)
+    user_xp, user_time, user_lvl = grab_user_info(id)
 
     lvl = user_lvl + amount
     df["Lvl"] = df["Lvl"].replace(to_replace=user_lvl, value=lvl)
 
-    lvl_xp = int(lvls.loc[int(lvl) + 1, 0].replace(",",""))
+    lvl_xp = int(lvls.loc[int(lvl) + 1, 0].replace(",", ""))
     print(lvl_xp, type(lvl_xp))
 
     server_amount = len(user_xp.keys())
 
     for _ in range(server_amount):
-        x = lvl_xp//(server_amount)
+        x = lvl_xp // (server_amount)
         print(x, server_amount, lvl_xp)
         add_xp(str(id), list(user_xp.keys())[_], x)
 
-    if(lvl_xp % server_amount != 0):
+    if (lvl_xp % server_amount != 0):
         for _ in range(server_amount):
             add_xp(str(id), list(user_xp.keys())[_], 1)
 
@@ -139,7 +139,7 @@ def add_lvl(id, amount):
     save_data(df)
 
 
-#TODO: removing levels (adjusts xp accordingly) ASK ABOUT HOW TO REMOVE LEVELS
+# TODO: removing levels (adjusts xp accordingly) ASK ABOUT HOW TO REMOVE LEVELS
 def remove_lvl(id, amount):
     global df
 
