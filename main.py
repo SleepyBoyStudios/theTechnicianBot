@@ -7,7 +7,7 @@ import logic as lg
 # Access the user data
 import data_access as da
 import json
-
+import re
 # Import constants
 
 
@@ -45,7 +45,7 @@ async def on_message(message):
 
 # --------------------------- ADMIN ONLY ---------------------------
 
-# TODO: Adds player to restrict list
+# Adds player to restrict list
 @bot.command(pass_context=True)
 async def rest(ctx, user):
     restrict = da.grab_restricted_list()
@@ -57,7 +57,7 @@ async def rest(ctx, user):
         await ctx.send("The user, " + user + " has been added to the restriction list.")
 
 
-# TODO: Removes player from restrict list
+# Removes player from restrict list
 @bot.command(pass_context=True)
 async def unrestrict(ctx, user):
     restrict = da.grab_restricted_list()
@@ -88,9 +88,10 @@ async def clearXp(user):
 
 
 # TODO: Level up player
-@bot.command
-async def lvlUp(user):
-    da.add_lvl(user)
+@bot.command(pass_context=True)
+async def lvlUp(ctx, user, amount=1): #user id format '<!@3892472389468912>'
+    user = re.sub('[^0-9]+', '', user)
+    da.add_lvl(user, amount)
 
 
 # TODO: Level down a player
