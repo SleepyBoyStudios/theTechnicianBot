@@ -4,6 +4,7 @@ from constants import CSV_NAME, LVL_LIST  # Imports constants from 'constants.py
 import random as rd  # Random Library
 import time  # Time Library
 import json  # conversion of string to dict
+import re # frickin regex bs
 
 
 # Loads from CSV
@@ -121,7 +122,7 @@ def add_xp(id, server, amount=0):
 
 
 # level upgrading
-def add_lvl(id, amount):
+def add_lvl(id, amount=1):
     global df, lvls
 
     user_xp, user_time, user_lvl = grab_user_info(id)
@@ -129,18 +130,21 @@ def add_lvl(id, amount):
     lvl = user_lvl + amount
     df["Lvl"] = df["Lvl"].replace(to_replace=user_lvl, value=lvl)
 
-    lvl_xp = int(lvls.loc[int(lvl) + 1, 0].replace(",", ""))
-    print(lvl_xp, type(lvl_xp))
+    lvl_xp = lvls.loc[int(lvl) + 1, 0]
+
+    lvl_xp = int(lvl_xp.split(",")[1])
 
     server_amount = len(user_xp.keys())
 
+    lvl_xp = lvl_xp - sum(user_xp.values())
+
     for _ in range(server_amount):
         x = lvl_xp // (server_amount)
-        print(x, server_amount, lvl_xp)
         add_xp(str(id), list(user_xp.keys())[_], x)
 
     if (lvl_xp % server_amount != 0):
-        for _ in range(server_amount):
+        mod_amount = lvl_xp % server_amount
+        for _ in range(mod_amount):
             add_xp(str(id), list(user_xp.keys())[_], 1)
 
     __set_time(user_time)

@@ -12,7 +12,6 @@ df = df.append({"ID": "684395467722850345", "XP": {"810002138830471178": 5, "gam
 df = df.append({"ID": "553441706318626856", "XP": {"810002138830471178": 5, "gaming": 284, "arts": 284, "fps": 284, "sl": 284, "dnd": 284}, "Time": 103, "Lvl": 9}, ignore_index=True)
 
 
-# print(df)
 df.to_csv(CSV_NAME, mode="w", index=False)  # mode="a" for append
 
 df = pd.DataFrame()
@@ -21,11 +20,9 @@ df = pd.read_csv("data.csv")
 
 ids = df["ID"].tolist()
 xps = df["XP"].tolist()
-print(ids)
-print(xps)
 
 # Create Restricted List
 with open('restricted.json', 'w') as json_file:
     json.dump(["<!@402319880860467201>"],indent = 4,fp=json_file)
 
-# print(df)
+print("Sample database created",'\n')
