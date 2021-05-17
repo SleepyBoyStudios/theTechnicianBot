@@ -37,7 +37,6 @@ async def on_message(message):
         return
 
     da.add_xp(auth.id, server)
-    da.add_lvl(auth.id, 1)
 
     await bot.process_commands(message)
 
@@ -50,8 +49,12 @@ async def on_message(message):
 @bot.command(pass_context=True)
 async def rest(ctx, user):
     restrict = da.grab_restricted_list()
-    restrict.append(user)
-    da.store_restricted_list(restrict)
+    if user in restrict:
+        await ctx.send("The user, " + user + " is already restricted!")
+    else:
+        restrict.append(user)
+        da.store_restricted_list(restrict)
+        await ctx.send("The user, " + user + " has been added to the restriction list.")
 
 
 # TODO: Removes player from restrict list
@@ -59,11 +62,11 @@ async def rest(ctx, user):
 async def unrestrict(ctx, user):
     restrict = da.grab_restricted_list()
     try:
-        restrict.remove(user.id)
+        restrict.remove(user)
         da.store_restricted_list(restrict)
-    except:
-        ctx.send("That user is not on the restricted list!")
-
+        await ctx.send("Removed " + user + " from the restriction list!")
+    except ValueError:
+        await ctx.send("That user is already not on the restricted list!")
 
 
 # TODO: Adds xp to a player
