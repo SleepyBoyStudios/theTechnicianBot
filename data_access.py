@@ -177,12 +177,22 @@ def clear_lvl(id):
 
 
 # Gets the user's info (xp, time, & level)
-def grab_user_info(id):
+def grab_user_info(user):
     global df
 
     ids = [str(x) for x in df["ID"].tolist()]
 
-    xpStr = df["XP"][ids.index(str(id))]
+    xpStr = df["XP"][ids.index(str(user))]
     print(xpStr.replace("\'", '\"'))
     xpDict = json.loads(xpStr.replace("\'", '\"'))
-    return xpDict, df["Time"].tolist()[ids.index(str(id))], df["Lvl"].tolist()[ids.index(str(id))]
+    return xpDict, df["Time"].tolist()[ids.index(str(user))], df["Lvl"].tolist()[ids.index(str(user))]
+
+
+def grab_restricted_list():
+    with open('restricted.json') as file:
+        return json.load(file)
+
+
+def store_restricted_list(list):
+    with open('restricted.json','w') as file:
+        json.dump(list, indent=4, fp=file)
