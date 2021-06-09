@@ -54,9 +54,7 @@ def calc_xp(id):
 
     user_xp, user_time, user_lvl = grab_user_info(id)
 
-    xp = sum(user_xp.values())
-
-    return xp
+    return sum(user_xp.values())
 
 
 # Checks if the id {id} exists
@@ -136,13 +134,13 @@ def add_lvl(id, amount=1):
 
     server_amount = len(user_xp.keys())
 
-    lvl_xp = lvl_xp - sum(user_xp.values())
+    lvl_xp -= sum(user_xp.values())
 
     for _ in range(server_amount):
-        x = lvl_xp // (server_amount)
+        x = lvl_xp // server_amount
         add_xp(str(id), list(user_xp.keys())[_], x)
 
-    if (lvl_xp % server_amount != 0):
+    if lvl_xp % server_amount != 0:
         mod_amount = lvl_xp % server_amount
         for _ in range(mod_amount):
             add_xp(str(id), list(user_xp.keys())[_], 1)
@@ -196,10 +194,10 @@ def grab_user_info(user):
 
     ids = [str(x) for x in df["ID"].tolist()]
 
-    xpStr = df["XP"][ids.index(str(user))]
-    print(xpStr.replace("\'", '\"'))
-    xpDict = json.loads(xpStr.replace("\'", '\"'))
-    return xpDict, df["Time"].tolist()[ids.index(str(user))], df["Lvl"].tolist()[ids.index(str(user))]
+    xp_str = df["XP"][ids.index(str(user))]
+    print(xp_str.replace("\'", '\"'))
+    xp_dict = json.loads(xp_str.replace("\'", '\"'))
+    return xp_dict, df["Time"].tolist()[ids.index(str(user))], df["Lvl"].tolist()[ids.index(str(user))]
 
 
 

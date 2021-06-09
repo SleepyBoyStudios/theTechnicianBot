@@ -6,8 +6,8 @@ from discord.ext import commands
 import logic as lg
 # Access the user data
 import data_access as da
-import json
 import re
+
 # Import constants
 
 
@@ -25,10 +25,9 @@ async def on_ready():
 # On each message...
 @bot.event
 async def on_message(message):
-
     # Set locals
     restrict = da.grab_restricted_list()
-    #member = await bot.fetch_user(message.author.id)
+    # member = await bot.fetch_user(message.author.id)
     auth = message.author
     server = message.guild.id
 
@@ -89,7 +88,7 @@ async def clearXp(user):
 
 # TODO: Level up player
 @bot.command(pass_context=True)
-async def lvlUp(ctx, user, amount=1): #user id format '<!@3892472389468912>'
+async def lvlUp(ctx, user, amount=1):  # user id format '<!@3892472389468912>'
     user = re.sub('[^0-9]+', '', user)
     da.add_lvl(user, amount)
 
@@ -116,9 +115,6 @@ async def df():
 @bot.command
 async def csv():
     return da.load_data()
-
-
-# --------------------------- GENERAL ---------------------------
 
 
 # ------------------------------------------------------ BOT SETUP -----------------------------------------------------
