@@ -7,7 +7,11 @@ import logic as lg
 # Access the user data
 import data_access as da
 
+#globals
 restrict = []
+member = None
+auth = None
+server = None
 
 bot = commands.Bot('>')  # Initializes bot with '>' prefix
 
@@ -21,74 +25,82 @@ async def on_ready():
 # On each message...
 @bot.event
 async def on_message(message):
-    global restrict
+    global restrict, auth, member, server
     # Check if the user is the bot or is in the restrict list
-    if (message.author == bot.user) or (message.author in restrict):
+    if (message.author == bot.user) or (message.author.id in restrict):
         return
 
-    # Sets auth as the name of the person in ID form
-    auth = message.author.id
+    # Set globals
+    member = message
+    auth = message.author
+    server = message.guild
 
     # Check if message sender is allowed to accrue points
-    if lg.deny_check(auth, restrict):
+    if lg.deny_check(auth.id, restrict):
         return
-
-    da.add_xp(auth)
+    
+    da.add_xp(auth.id)
 
 
 # ------------------------------------------------------ COMMANDS ------------------------------------------------------
 
 # --------------------------- ADMIN ONLY ---------------------------
 
-# Adds player to restrict list
+#TODO: Adds player to restrict list
 @bot.command
 async def restrict(auth):
     return
 
 
-# Removes player from restrict list
+#TODO: Removes player from restrict list
 @bot.command
 async def unrestrict(auth):
     return
 
 
-# Adds xp to a player
+#TODO: Adds xp to a player
 @bot.command
-async def add_xp(auth):
+async def addXp(auth, amount):
     return
 
 
-# Removes xp from a player
+#TODO: Removes xp from a player
 @bot.command
-async def remove_xp(auth):
+async def removeXp(auth, amount):
     return
 
 
-# Level up player
+#TODO: Clears all xp from a player
 @bot.command
-async def lvl_up(auth):
+async def clearXp(auth):
     return
 
 
-# Level down a player
+#TODO: Level up player
 @bot.command
-async def lvl_down(auth):
+async def lvlUp(auth):
     return
 
 
-# Level a player to a rank
+#TODO: Level down a player
 @bot.command
-async def lvl_to(auth, rank):
+async def lvlDown(auth):
     return
 
 
-# Prints out the DataFrame
+#TODO: Level a player to a rank
+@bot.command
+async def lvlTo(auth, rank):
+    return
+
+
+#TODO: Prints out the DataFrame
 @bot.command
 async def df():
     return
 
 
-# Prints out the CSV
+#TODO: Prints out the CSV
 @bot.command
 async def csv():
     return
