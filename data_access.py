@@ -1,6 +1,6 @@
 # Data Storage
 import pandas as pd  # Database Library
-from constants import CSV_NAME  # Imports constants from 'constants.py'
+from constants import CSV_NAME, LVL_LIST  # Imports constants from 'constants.py'
 import random as rd  # Random Library
 import time  # Time Library
 
@@ -15,15 +15,27 @@ def save_data(new_df, m='w'):
     new_df.to_csv(CSV_NAME, mode=m, index=False)
 
 
+
+def load_lvls():
+    return pd.read_csv(LVL_LIST, sep="\n", header=None)
+
+
 # Globals
 df = load_data()
+lvls = load_lvls()
 
 
-# Checks if the id {auth} exists
-def id_exists(auth):
+#Sets the time in the DataFrame
+def __set_time(user_time):
+    global df
+    df["Time"] = df["Time"].replace(to_replace=user_time, value=int(time.time()))
+
+
+# Checks if the id {id} exists
+def id_exists(id):
     global df
 
-    id_index = df['ID'] == auth  # gets id index from DataFrame and stores it in the variable 'id_index'
+    id_index = df['ID'] == id  # gets id index from DataFrame and stores it in the variable 'id_index'
 
     if len(df.loc[id_index]) != 0:  # If length of the id != 0 (df.loc() is to locate)
         return True
@@ -67,21 +79,78 @@ def del_user(id):
 def add_xp(id):
     global df
 
-    user_xp, user_time = grab_user_info(id)
+    user_xp, user_time, user_lvl = grab_user_info(id)
 
     xp = user_xp + rd.randint(25, 50)
     df["XP"] = df["XP"].replace(to_replace=user_xp, value=xp)
 
-    df["Time"] = df["Time"].replace(to_replace=user_time, value=int(time.time()))
+    __set_time(user_time)
 
     # Update CSV
     print("xp added")
     save_data(df)
 
 
+# level upgrading
+def add_lvl(id, amount):
+    global df
+
+    user_xp, user_time, user_lvl =  grab_user_info(id)
+
+    lvl = user_lvl + amount
+    df["Lvl"] = df["Lvl"].replace(to_replace=user_lvl, value=lvl)
+
+    xp = lvls.loc[lvl]
+
+    df["XP"] = df["XP"].replace(to_replace=user_xp, value=int(xp))
+
+    __set_time(user_time)
+
+    print("Level added and saved")
+    save_data(df)
+
+
+# removing levels (adjusts xp accordingly)
+def remove_lvl(id, amount):
+    global df
+
+    user_xp, user_time, user_lvl =  grab_user_info(id)
+
+    lvl = user_lvl - amount
+    df["Lvl"] = df["Lvl"].replace(to_replace=user_lvl, value=lvl)
+
+    xp = lvls.loc[lvl]
+
+    df["XP"] = df["XP"].replace(to_replace=user_xp, value=int(xp))
+
+    __set_time(user_time)
+
+    print("Level removed and saved")
+    save_data(df)
+
+
+# clear all levels (including xp)
+def clear_lvl(id):
+    global df
+
+    user_xp, user_time, user_lvl =  grab_user_info(id)
+
+    lvl = 0
+    df["Lvl"] = df["Lvl"].replace(to_replace=user_lvl, value=lvl)
+
+    xp = 0
+    df["XP"] = df["XP"].replace(to_replace=user_xp, value=xp)
+
+    __set_time(user_time)
+
+    print("Level added and saved")
+    save_data(df)
+
+
+# Gets the user's info (xp, time, & level)
 def grab_user_info(id):
     global df
 
     ids = df["ID"].tolist()
 
-    return df["XP"].tolist()[ids.index(id)], df["Time"].tolist()[ids.index(id)]
+    return df["XP"].tolist()[ids.index(id)], df["Time"].tolist()[ids.index(id)], df["Lvl"].tolist()[ids.index(id)]

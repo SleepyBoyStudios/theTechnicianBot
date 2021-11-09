@@ -1,3 +1,4 @@
+.gitignore
 OldStuff
 __pycache__
 data.csv
@@ -6,4 +7,9 @@ data.csv
 .poetry.lock
 pyproject.toml
 .vscode/settings.json
+<<<<<<< HEAD
 venv
+=======
+test.py
+levelVals.txt
+>>>>>>> f9752017973f35d15b89791ccc4dfbd6f9d4dcc2
