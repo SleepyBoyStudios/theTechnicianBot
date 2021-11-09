@@ -6,3 +6,4 @@ data.csv
 .poetry.lock
 pyproject.toml
 .vscode/settings.json
+venv
