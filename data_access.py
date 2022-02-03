@@ -19,7 +19,7 @@ def save_data(new_df, m='w'):
 
 # Loads levels from CSV
 def load_lvls():
-    return pd.read_csv(LVL_LIST, sep="\n", header=None)
+    return pd.read_csv(LVL_LIST, sep=",", header=None)
 
 
 def grab_restricted_list():
