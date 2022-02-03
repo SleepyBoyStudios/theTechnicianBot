@@ -13,3 +13,8 @@ venv
 test.py
 levelVals.txt
 >>>>>>> f9752017973f35d15b89791ccc4dfbd6f9d4dcc2
+
+.history
+.idea
+venv
+.github
