@@ -1,20 +1,23 @@
 # theTechnicianBot
-## **\*\*\*this be bot\*\*\*** 
+
+## **\*\*\*this be bot\*\*\***
 
 [![Build Status](https://www.travis-ci.com/DR2K/theTechnicianBot.svg?token=QwWz8Yssegwr1y7p23ma&branch=main)](https://www.travis-ci.com/DR2K/theTechnicianBot)
 
 ----
 
-### Help:
+### Help
+
 For any answers needed: [help plz](https://stackoverflow.com/)
 
 ----
 
-### Info:
+### Info
+
 This Bot is supposed to be a replacement for the MEE6 premium bot's leveling functionality with some added ***\~flavor\~***
 
-
 This bot by the end of it's development should have the core features of:
+
 - chat point counting
 - multi-server integration
 - auto role ranking
