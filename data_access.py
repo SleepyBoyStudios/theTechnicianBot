@@ -73,7 +73,7 @@ def id_exists(id):
 # Adds user to the DataFrame and to the csv
 def add_user(id):
     global df
-    data = {"ID": str(id), "XP": int(0), "Time": int(0)}  # Temporary 1 item DataFrame stored in 'data'
+    data = {"ID": str(id), "XP": 0, "Time": 0} # Temporary 1 item DataFrame stored in 'data'
 
     print("\n" + str(data) + "\n")
 
@@ -82,7 +82,7 @@ def add_user(id):
 
     print(str(df.head()) + "\n")
     # update csv file
-    print("Adding user: " + str(id) + "... ")
+    print(f"Adding user: {str(id)}... ")
     save_data(df)
     print("Done!\n")
 
@@ -96,7 +96,7 @@ def del_user(id):
 
     df = df.drop(id)  # Drops the row containing the id in 'id'
 
-    print("Dropping id: " + str(id) + "... ")
+    print(f"Dropping id: {str(id)}... ")
     save_data(df)  # Drops id in CSV
     print("Done!\n")
 
