@@ -28,7 +28,7 @@ This bot by the end of it's development should have the core features of:
 
 ### Disclaimers & Technical Info
 
-**Language:** Python 3.9.4  
+**Language:** Python 3.10.2  
 **Data storage type:** CSV on local storage  
 **Runtime Environment:** [Repl.it](https://replit.com/)  
 **Bot use platform:** Discord  
