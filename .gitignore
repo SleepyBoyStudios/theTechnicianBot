@@ -11,6 +11,8 @@ venv
 test.py
 levelVals.txt
 data.csv
+node_modules
+package*
 
 .history
 .idea
