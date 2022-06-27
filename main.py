@@ -90,7 +90,7 @@ async def clearXp(user):
 # TODO: Level up player
 @bot.command(pass_context=True)
 async def lvlUp(ctx, user, amount=1):  # user id format '<!@3892472389468912>'
-    user = re.sub('[^0-9]+', '', user)
+    user = re.sub('\\D+', '', user)
     da.add_lvl(user, amount)
 
 
