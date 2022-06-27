@@ -1,7 +1,6 @@
 # Data Storage
 import json
-import sqlite3
-from sqlite3 import Error
+import sqlite3 as db
 import pandas as pd
 from constants import CSV_NAME
 
@@ -14,9 +13,16 @@ df = df.append({"ID": "553441706318626856", "XP": {"810002138830471178": 5, "gam
 
 # sqldf = df.to_sql('data',con=sqlite3.connect('data.db'), if_exists='replace'
 
+#! This doesn't work because of the way sqlite handles dictionares. We cant just store a dictionary as one WHOLE value
+
+conn = db.connect('./data.db')
+df.to_sql(name ='database', con = db.connect('./data.db'), if_exists='replace')
+
+conn.close()
+
 df = pd.DataFrame()
 
-df = pd.read_sql_table('data', con=sqlite3.connect('data.db'))
+df = pd.read_sql_table('data', con=db.connect('data.db'))
 
 ids = df["ID"].tolist()
 xps = df["XP"].tolist()
