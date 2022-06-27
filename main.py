@@ -50,11 +50,11 @@ async def on_message(message):
 async def rest(ctx, user):
     restrict = da.grab_restricted_list()
     if user in restrict:
-        await ctx.send("The user, " + user + " is already restricted!")
+        await ctx.send(f"The user, {user} is already restricted!")
     else:
         restrict.append(user)
         da.store_restricted_list(restrict)
-        await ctx.send("The user, " + user + " has been added to the restriction list.")
+        await ctx.send(f"The user, {user} has been added to the restriction list.")
 
 
 # Removes player from restrict list
@@ -64,7 +64,7 @@ async def unrestrict(ctx, user):
     try:
         restrict.remove(user)
         da.store_restricted_list(restrict)
-        await ctx.send("Removed " + user + " from the restriction list!")
+        await ctx.send(f"Removed {user} from the restriction list!")
     except ValueError:
         await ctx.send("That user is already not on the restricted list!")
 

@@ -7,11 +7,8 @@ from constants import RANK_DICT
 def deny_check(user, restrict=None):
     if restrict is None:
         restrict = []
-    if int(user.id) in restrict or user.bot:
-        return True
-    else:
-        return check_time(id)
-
+    return True if int(user.id) in restrict or user.bot else check_time(id)
+    
 
 # Check Time
 def check_time(id):
@@ -38,7 +35,7 @@ def check_rank(auth, member=None):
 
     similar_roles = list(set(role_list).intersection(set(user_role_list)))
 
-    if similar_roles == []:
+    if not similar_roles:
         return None, False  # returns the highest rank and if they ranked up (str, bool)
 
     highest_rank = -1
