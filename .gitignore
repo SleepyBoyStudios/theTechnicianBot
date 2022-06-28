@@ -19,3 +19,4 @@ package*
 venv
 .github
 data.csv
+Pipfile.lock
