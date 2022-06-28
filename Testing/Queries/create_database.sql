@@ -1,0 +1,21 @@
+CREATE TABLE User_Info (
+    user_ID INTEGER PRIMARY KEY,
+    total_XP INTEGER,
+    level INTEGER,
+    time INTEGER,
+    is_restricted BOOLEAN
+);
+
+CREATE TABLE 991178883682541700 (
+    server_991178883682541700_rec_ID INTEGER PRIMARY KEY,
+    user_ID INTEGER,
+    server_xp INTEGER,
+    FOREIGN KEY (user_ID) REFERENCES User_Info(user_ID)
+);
+
+CREATE TABLE 810002138830471178 (
+    server_810002138830471178_rec_ID INTEGER PRIMARY KEY,
+    user_ID INTEGER,
+    server_xp INTEGER,
+    FOREIGN KEY (user_ID) REFERENCES User_Info(user_ID)
+);
