@@ -31,13 +31,15 @@ df.to_sql(name ='User_Info', con = conn)
 
 df = pd.DataFrame(columns = ["server_991178883682541700_rec_id","user_ID","server_xp"])
 
+df = df.read_csv("./TestDataCSV/server_1.csv")
+
 df.to_sql(name ='Server_991178883682541700', con = conn)
 
 # ---------------------------------------------------------------
 
 df = pd.DataFrame(columns = ["server_810002138830471178_rec_id","user_ID","server_xp"])
 
-# DATA
+df = df.read_csv("./TestDataCSV/server_2.csv")
 
 df.to_sql(name ='Server_810002138830471178', con = conn)
 
