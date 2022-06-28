@@ -13,6 +13,10 @@ levelVals.txt
 data.csv
 node_modules
 package*
+plans
+testing
+
+data.db
 
 .history
 .idea
