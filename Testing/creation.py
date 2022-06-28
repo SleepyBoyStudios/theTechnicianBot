@@ -2,7 +2,7 @@
 import json
 import sqlite3 as db
 import pandas as pd
-from constants import CSV_NAME
+import os
 
 # TODO: Find a way to handle a dict in a database, as of rn I have no clue 
 
@@ -14,36 +14,61 @@ from constants import CSV_NAME
 # df = df.append({"ID": "553441706318626856", "XP": {"ID": "553441706318626856", "810002138830471178": 5, "gaming": 284, "arts": 284, "fps": 284, "sl": 284, "dnd": 284}, "Time": 103, "Lvl": 9}, ignore_index=True)
 
 # sqldf = df.to_sql('data',con=sqlite3.connect('data.db'), if_exists='replace'
+os.chdir("/home/abhi/Documents/Code-local/Python/theTechnicianBot/")
 
-conn = db.connect('/data.db')
+conn = db.connect('./../data.db')
 
 query = conn.cursor()
 
-query.executescript("./Queries/create_tables.sql")
+sql_script = """ 
 
-df = pd.DataFrame(coloumns = ["user_ID","total_XP","level","time","is_restricted"])
+VACUUM;
 
-df = df.read_csv("./TestDataCSV/User_Info.csv")
+CREATE TABLE User_Info (
+    user_ID CHAR(16) PRIMARY KEY,
+    total_XP INTEGER,
+    level INTEGER,
+    time INTEGER,
+    is_restricted BOOLEAN
+);
+
+CREATE TABLE Server_991178883682541700 (
+    server_991178883682541700_rec_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_ID CHAR(16),
+    server_xp INTEGER,
+    FOREIGN KEY (user_ID) REFERENCES User_Info(user_ID)
+);
+
+CREATE TABLE Server_810002138830471178 (
+    server_810002138830471178_rec_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_ID CHAR(16),
+    server_xp INTEGER,
+    FOREIGN KEY (user_ID) REFERENCES User_Info(user_ID)
+);
+
+"""
+# if (query.fetchall()) is None:
+# query.executescript(sql_script)
+
+df = pd.read_csv(r"./TestDataCSV/User_info.csv")
 
 df.to_sql(name ='User_Info', con = conn)
 
 # ---------------------------------------------------------------
 
-df = pd.DataFrame(columns = ["server_991178883682541700_rec_id","user_ID","server_xp"])
-
-df = df.read_csv("./TestDataCSV/server_1.csv")
+df = pd.read_csv(r"./TestDataCSV/server_1.csv")
 
 df.to_sql(name ='Server_991178883682541700', con = conn)
 
 # ---------------------------------------------------------------
 
-df = pd.DataFrame(columns = ["server_810002138830471178_rec_id","user_ID","server_xp"])
-
-df = df.read_csv("./TestDataCSV/server_2.csv")
+df = pd.read_csv(r"./TestDataCSV/server_2.csv")
 
 df.to_sql(name ='Server_810002138830471178', con = conn)
 
 # ---------------------------------------------------------------
+
+conn.commit()
 
 conn.close()
 
