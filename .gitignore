@@ -14,7 +14,7 @@ data.csv
 node_modules
 package*
 plans
-testing
+Testing
 
 data.db
 
@@ -24,3 +24,4 @@ venv
 .github
 data.csv
 Pipfile.lock
+.vsls.json
