@@ -4,6 +4,8 @@ import sqlite3 as db
 import pandas as pd
 from constants import CSV_NAME
 
+# TODO: Find a way to handle a dict in a database, as of rn I have no clue 
+
 df = pd.DataFrame(columns=["ID", "XP", "Time", "Lvl"])
 df = df.append({"ID": "330075847799341076", "XP": {"810002138830471178": -1, "gaming": 1, "arts": 1, "fps": 1, "sl": 1, "dnd": 1}, "Time": 100, "Lvl": 0}, ignore_index=True)
 df = df.append({"ID": "190625917507207171", "XP": {"810002138830471178": 800, "gaming": 800, "arts": 800, "fps": 800, "sl": 800, "dnd": 1000}, "Time": 101, "Lvl": 11}, ignore_index=True)
