@@ -15,19 +15,39 @@ from constants import CSV_NAME
 
 # sqldf = df.to_sql('data',con=sqlite3.connect('data.db'), if_exists='replace'
 
-conn = db.connect('./data.db')
+conn = db.connect('/data.db')
+
+query = conn.cursor()
+
+query.executescript("./Queries/create_tables.sql")
 
 df = pd.DataFrame(coloumns = ["user_ID","total_XP","level","time","is_restricted"])
 
-df.to_sql(name ='User_Info', con = db.connect('./data.db'), if_exists='replace')
+df = df.read_csv("./TestDataCSV/User_Info.csv")
 
-df = pd.DataFrame(columns = [""])
+df.to_sql(name ='User_Info', con = conn)
+
+# ---------------------------------------------------------------
+
+df = pd.DataFrame(columns = ["server_991178883682541700_rec_id","user_ID","server_xp"])
+
+df.to_sql(name ='Server_991178883682541700', con = conn)
+
+# ---------------------------------------------------------------
+
+df = pd.DataFrame(columns = ["server_810002138830471178_rec_id","user_ID","server_xp"])
+
+# DATA
+
+df.to_sql(name ='Server_810002138830471178', con = conn)
+
+# ---------------------------------------------------------------
 
 conn.close()
 
 df = pd.DataFrame()
 
-df = pd.read_sql_table('data', con=db.connect('data.db'))
+df = pd.read_sql_table('User_Info', conn)
 
 ids = df["ID"].tolist()
 xps = df["XP"].tolist()
