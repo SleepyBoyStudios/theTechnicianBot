@@ -1,0 +1,4 @@
+requests
+discord.py ~= 1.7.3
+pandas ~= 1.4.3
+python-decouple ~= 3.6
