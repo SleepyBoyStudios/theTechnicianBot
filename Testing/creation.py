@@ -1,7 +1,9 @@
 # Data Storage
 import json
 import sqlite3 as db
+from tokenize import Double
 import pandas as pd
+import numpy as np
 import os
 
 # TODO: Find a way to handle a dict in a database, as of rn I have no clue 
@@ -50,21 +52,25 @@ CREATE TABLE Server_810002138830471178 (
 # if (query.fetchall()) is None:
 # query.executescript(sql_script)
 
-df = pd.read_csv(r"./TestDataCSV/User_info.csv")
+db.register_adapter(np.int64, int) #! tried adding this but it didnt work
 
-df.to_sql(name ='User_Info', con = conn)
+df = pd.read_csv(r"./Testing/TestDataCSV/User_info.csv")
 
-# ---------------------------------------------------------------
+print(f'DataFrame: {type(df["user_ID"][0])}')
 
-df = pd.read_csv(r"./TestDataCSV/server_1.csv")
-
-df.to_sql(name ='Server_991178883682541700', con = conn)
+df.to_sql(name = 'User_Info', con = conn, if_exists = 'append', index = False)
 
 # ---------------------------------------------------------------
 
-df = pd.read_csv(r"./TestDataCSV/server_2.csv")
+df = pd.read_csv(r"./Testing/TestDataCSV/server_1.csv")
 
-df.to_sql(name ='Server_810002138830471178', con = conn)
+df.to_sql(name = 'Server_991178883682541700', con = conn, if_exists = 'append', index = False)
+
+# ---------------------------------------------------------------
+
+df = pd.read_csv(r"./Testing/TestDataCSV/server_2.csv")
+
+df.to_sql(name = 'Server_810002138830471178', con = conn, if_exists = 'append', index = False)
 
 # ---------------------------------------------------------------
 
