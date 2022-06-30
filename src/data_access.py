@@ -1,9 +1,10 @@
 # Data Storage
 import pandas as pd  # Database Library
-from constants import CSV_NAME, LVL_LIST  # Imports constants from 'constants.py'
+from constants import DB_PATH, CSV_NAME, LVL_LIST_PATH  # Imports constants from 'constants.py'
 import random as rd  # Random Library
 import time  # Time Library
 import json  # conversion of string to dict
+import sqlalchemy as sa
 import re # frickin regex bs
 
 
@@ -11,15 +12,22 @@ import re # frickin regex bs
 def load_data():
     return pd.read_csv(CSV_NAME)
 
+# Loads table from database
+def load_table(tbl = None):
+    return Exception('No table to load DataFrame from') if tbl is None else pd.read_sql_table(tbl, sa.create_engine(f"sqlite://{DB_PATH}"))
 
 # Saves to CSV
 def save_data(new_df, m='w'):
     new_df.to_csv(CSV_NAME, mode=m, index=False)
 
+def save_table(new_df, tbl = None):
+    if tbl is None:
+        return Exception('No table to save DataFrame in') 
+    new_df.to_sql(tbl, sa.create_engine(f"sqlite://{DB_PATH}"))
 
 # Loads levels from CSV
 def load_lvls():
-    return pd.read_csv(LVL_LIST, sep=",", header=None)
+    return pd.read_csv(LVL_LIST_PATH, sep=",", header=None)
 
 
 def grab_restricted_list():

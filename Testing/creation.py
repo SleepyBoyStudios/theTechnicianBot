@@ -1,10 +1,12 @@
 # Data Storage
-import json
 import sqlite3 as db
 import sqlalchemy as sa
 import pandas as pd
-import numpy as np
-import os
+import sys
+
+sys.path.append('.')
+
+from src.constants import DB_PATH
 
 # TODO: Find a way to handle a dict in a database, as of rn I have no clue
 
@@ -17,8 +19,8 @@ import os
 
 # sqldf = df.to_sql('data',con=sqlite3.alcect('data.db'), if_exists='replace'
 
-alc = sa.create_engine(r"sqlite:///src/database/data.db").connect()
-script = db.connect(r"./src/database/data.db")
+alc = sa.create_engine(rf"sqlite://{DB_PATH}").connect()
+script = db.connect(rf".{DB_PATH}")
 
 sql_create_script = open(r"./Testing/Queries/create_database.sql").read()
 sql_drop_script = open(r"./Testing/Queries/drop_db.sql").read()
