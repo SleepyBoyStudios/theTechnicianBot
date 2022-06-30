@@ -5,22 +5,17 @@ import random as rd  # Random Library
 import time  # Time Library
 import json  # conversion of string to dict
 import sqlalchemy as sa
-import re # frickin regex bs
-
-
-# Loads from CSV
-def load_data():
-    return pd.read_csv(CSV_NAME)
 
 # Loads table from database
-def load_table(tbl = None):
+def load_table(tbl: str = None):
     return Exception('No table to load DataFrame from') if tbl is None else pd.read_sql_table(tbl, sa.create_engine(f"sqlite://{DB_PATH}"))
 
 # Saves to CSV
-def save_data(new_df, m='w'):
+def save_data(new_df: pd.DataFrame, m: str = 'w'):
     new_df.to_csv(CSV_NAME, mode=m, index=False)
 
-def save_table(new_df, tbl = None):
+# Saves table from database
+def save_table(new_df: pd.DataFrame, tbl: str = None):
     if tbl is None:
         return Exception('No table to save DataFrame in') 
     new_df.to_sql(tbl, sa.create_engine(f"sqlite://{DB_PATH}"))
@@ -35,13 +30,14 @@ def grab_restricted_list():
         return json.load(file)
 
 
-def store_restricted_list(list):
+def store_restricted_list(list: list):
     with open('restricted.json','w') as file:
         json.dump(list, indent=4, fp=file)
 
 
 # Globals
-df = load_data()
+df_user_info = load_table(tbl='user_info')
+df_child_table = pd.DataFrame()
 lvls = load_lvls()
 
 
@@ -55,8 +51,6 @@ def __set_time(user_time):
     global df
     df["Time"] = df["Time"].replace(to_replace=user_time, value=int(time.time()))
 
-
-# TODO: Calculates total xp
 def calc_xp(id):
     global df
 
@@ -65,13 +59,13 @@ def calc_xp(id):
     return sum(user_xp.values())
 
 
-# Checks if the id {id} exists
-def id_exists(id):
-    global df
+# Checks if the id {user_id} exists
+async def id_exists(user_id) -> bool:
+    global df_user_info
 
-    id_index = df['ID'] == id  # gets id index from DataFrame and stores it in the variable 'id_index'
+    id_index = await df_user_info.index(user_id)  # gets id index from DataFrame and stores it in the variable 'id_index'
 
-    if len(df.loc[id_index]) != 0:  # If length of the id != 0 (df.loc() is to locate)
+    if len(await df.loc[id_index]) != 0:  # If length of the id != 0 (df.loc() is to locate)
         return True
 
     print("Does not exist")
@@ -79,19 +73,23 @@ def id_exists(id):
 
 
 # Adds user to the DataFrame and to the csv
-def add_user(id):
-    global df
-    data = {"ID": str(id), "XP": 0, "Time": 0} # Temporary 1 item DataFrame stored in 'data'
+async def add_user(user_id: int):
+    global df_user_info
+    data = {"user_ID": user_id, "total_XP": 0, "level": 0, "time": 0} # Temporary 1 item DataFrame stored in 'data'
 
-    print("\n" + str(data) + "\n")
+    print(f'\n{data}\n')
 
-    df = df.append(data, ignore_index=True)  # append temp DataFrame to global DataFrame
-    df = df.head()
+    df_user_info = await df_user_info.append(data, ignore_index=True)  # append temp DataFrame to global DataFrame
+    df_user_info = await df_user_info.head()
 
-    print(str(df.head()) + "\n")
-    # update csv file
-    print(f"Adding user: {str(id)}... ")
-    save_data(df)
+    print(f'{df_user_info.head()}\n')
+
+    # update database
+    print(f"Adding user: {user_id}... ")
+
+    e = await save_table(new_df=df_user_info, tbl='User_Info')
+    if e is not None: print(e)
+
     print("Done!\n")
 
 
