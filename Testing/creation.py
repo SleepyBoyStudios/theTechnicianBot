@@ -17,8 +17,8 @@ import os
 
 # sqldf = df.to_sql('data',con=sqlite3.alcect('data.db'), if_exists='replace'
 
-alc = sa.create_engine(r"sqlite:///data.db").connect()
-script = db.connect(r"data.db")
+alc = sa.create_engine(r"sqlite:///src/database/data.db").connect()
+script = db.connect(r"./src/database/data.db")
 
 sql_create_script = open(r"./Testing/Queries/create_database.sql").read()
 sql_drop_script = open(r"./Testing/Queries/drop_db.sql").read()
