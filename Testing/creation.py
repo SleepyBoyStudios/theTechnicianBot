@@ -75,8 +75,10 @@ with alc.begin():
 
 # ---------------------------------------------------------------
 
-df = pd.DataFrame()
+user_info = server_1 = server_2 = pd.DataFrame()
 
-df = pd.read_sql_table('User_Info', alc)
+user_info = pd.read_sql_table('User_Info', alc)
+server_1 = pd.read_sql_table('Server_991178883682541700', alc)
+server_2 = pd.read_sql_table('Server_810002138830471178', alc)
 
-print(f'Sample database created:\n{df.head()}\n')
+print(f'Sample database created:\n{user_info.head()}\n\n {server_1.head()}\n\n {server_2.head()}\n')
