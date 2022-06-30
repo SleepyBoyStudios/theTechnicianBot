@@ -1,5 +1,6 @@
 import data_access as da  # data access API
 import time
+from asgiref.sync import async_to_sync
 from constants import RANK_DICT
 
 
@@ -11,9 +12,10 @@ def deny_check(user, restrict=None):
     
 
 # Check Time
-def check_time(id):
-    if not da.id_exists(id):
-        da.add_user(id)
+@async_to_sync
+async def check_time(id):
+    if not await da.id_exists(id):
+        await da.add_user(id)
         return False
 
     user_xp, user_time, user_lvl = da.grab_user_info(id)

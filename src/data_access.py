@@ -7,7 +7,7 @@ import json  # conversion of string to dict
 import sqlalchemy as sa
 
 # Loads table from database
-def load_table(tbl: str = None):
+def load_table(tbl: str = None) -> (Exception / pd.DataFrame):
     return Exception('No table to load DataFrame from') if tbl is None else pd.read_sql_table(tbl, sa.create_engine(f"sqlite://{DB_PATH}"))
 
 # Saves to CSV
@@ -21,11 +21,11 @@ def save_table(new_df: pd.DataFrame, tbl: str = None):
     new_df.to_sql(tbl, sa.create_engine(f"sqlite://{DB_PATH}"))
 
 # Loads levels from CSV
-def load_lvls():
+def load_lvls() -> pd.DataFrame:
     return pd.read_csv(LVL_LIST_PATH, sep=",", header=None)
 
 
-def grab_restricted_list():
+def grab_restricted_list() -> list:
     with open('restricted.json') as file:
         return json.load(file)
 
@@ -47,7 +47,7 @@ def load_dataframe():
 
 
 # Sets the time in the DataFrame
-def __set_time(user_time):
+def __set_time(user_time) -> int:
     global df
     df["Time"] = df["Time"].replace(to_replace=user_time, value=int(time.time()))
 
@@ -60,19 +60,16 @@ def calc_xp(id):
 
 
 # Checks if the id {user_id} exists
-async def id_exists(user_id) -> bool:
+async def id_exists(user_id) -> (int / bool):
     global df_user_info
 
-    id_index = await df_user_info.index(user_id)  # gets id index from DataFrame and stores it in the variable 'id_index'
+    user = df_user_info.loc(await df_user_info.index(user_id))  # gets id index from DataFrame and stores it in the variable 'id_index'
 
-    if len(await df.loc[id_index]) != 0:  # If length of the id != 0 (df.loc() is to locate)
-        return True
-
-    print("Does not exist")
-    return False
+    # If length of the id != 0 (df.loc() is to locate)
+    return user if len(user) != 0 else False
 
 
-# Adds user to the DataFrame and to the csv
+# Adds user to the DataFrame and to the database
 async def add_user(user_id: int):
     global df_user_info
     data = {"user_ID": user_id, "total_XP": 0, "level": 0, "time": 0} # Temporary 1 item DataFrame stored in 'data'
@@ -196,9 +193,9 @@ def clear_lvl(id):
 
 # Gets the user's info (xp, time, & level)
 def grab_user_info(user):
-    global df
+    global df_user_info
 
-    ids = [str(x) for x in df["ID"].tolist()]
+    ids = [str(x) for x in df["user_ID"].tolist()]
 
     xp_str = df["XP"][ids.index(str(user))]
     print(xp_str.replace("\'", '\"'))
