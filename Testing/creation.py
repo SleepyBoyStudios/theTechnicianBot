@@ -1,7 +1,7 @@
 # Data Storage
 import json
 import sqlite3 as db
-from tokenize import Double
+from sqlalchemy import create_engine
 import pandas as pd
 import numpy as np
 import os
@@ -18,40 +18,19 @@ import os
 # sqldf = df.to_sql('data',con=sqlite3.connect('data.db'), if_exists='replace'
 
 conn = db.connect('./Testing/data.db')
+alc = create_engine(r"sqlite:///data.db").connect()
 
 query = conn.cursor()
 
-sql_script = """ 
+sql_create_script = open(r"./Testing/Queries/create_database.sql").read()
+sql_drop_script = open(r"./Testing/Queries/drop_db.sql").read()
 
-VACUUM;
+if (query.fetchall()) is not None:
+    query.executescript(sql_drop_script)
 
-CREATE TABLE User_Info (
-    user_ID CHAR(16) PRIMARY KEY,
-    total_XP INTEGER,
-    level INTEGER,
-    time INTEGER,
-    is_restricted BOOLEAN
-);
+query.executescript(sql_create_script)
 
-CREATE TABLE Server_991178883682541700 (
-    server_991178883682541700_rec_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_ID CHAR(16),
-    server_xp INTEGER,
-    FOREIGN KEY (user_ID) REFERENCES User_Info(user_ID)
-);
-
-CREATE TABLE Server_810002138830471178 (
-    server_810002138830471178_rec_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_ID CHAR(16),
-    server_xp INTEGER,
-    FOREIGN KEY (user_ID) REFERENCES User_Info(user_ID)
-);
-
-"""
-# if (query.fetchall()) is None:
-# query.executescript(sql_script)
-
-db.register_adapter(np.int64, int)  #! tried adding this but it didnt work
+# db.register_adapter(np.int64, int)  #! tried adding this but it didnt work
 
 df = pd.read_csv(r"./Testing/TestDataCSV/User_info.csv")
 
@@ -83,11 +62,8 @@ conn.commit()
 
 df = pd.DataFrame()
 
-df = pd.read_sql_table('User_Info', conn)
-
-ids = df["ID"].tolist()
-xps = df["XP"].tolist()
+df = pd.read_sql_table('User_Info', alc)
 
 conn.close()
 
-print("Sample database created", '\n')
+print(f'Sample database created:\n{df.head()}\n')
