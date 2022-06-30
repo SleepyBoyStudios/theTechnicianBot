@@ -14,9 +14,12 @@ data.csv
 node_modules
 package*
 
+data.db
+
 .history
 .idea
 venv
 .github
 data.csv
 Pipfile.lock
+.vsls.json

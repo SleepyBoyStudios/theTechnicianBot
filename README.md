@@ -2,15 +2,47 @@
 
 ## **\*\*\*this be bot\*\*\***
 
-[![Build Status](https://www.travis-ci.com/DR2K/theTechnicianBot.svg?token=QwWz8Yssegwr1y7p23ma&branch=main)](https://www.travis-ci.com/DR2K/theTechnicianBot)
+---
 
-----
+## Help
 
-### Help
+*[For any answers needed](https://stackoverflow.com/)*
 
-For any answers needed: [help plz](https://stackoverflow.com/)
+---
 
-----
+## Setup Dev Environment
+
+1. Clone this repository and move inside it
+
+    ``` bash
+    git clone https://github.com/SleepyBoyStudios/theTechnicianBot.git && cd theTechnicianBot/
+    ```
+
+2. Install pipenv:
+
+    ``` bash
+    pip install pipenv
+    ```
+
+3. Move to the sub shell
+
+    ``` bash
+    pipenv shell --python 3.10
+    ```
+
+4. Install the dependencies
+
+    ``` bash
+    pipenv install
+    ```
+
+5. Run using pipenv
+
+    ``` bash
+    pipenv run python main.py
+    ```
+
+---
 
 ### Info
 
@@ -22,21 +54,19 @@ This bot by the end of it's development should have the core features of:
 - multi-server integration
 - auto role ranking
 - spam protection for point exploiting
-- added *spice* with some easter eggs ;)
+- added ***spice*** with some easter eggs ;)
 
-----
+---
 
 ### Disclaimers & Technical Info
 
-**Language:** Python 3.10.2  
+**Language:** Python 3.10.5  
 **Data storage type:** CSV on local storage  
 **Runtime Environment:** [Repl.it](https://replit.com/)  
 **Bot use platform:** Discord  
 
-*\*This bot is not to be used in any commercial access*  
-*\*We are just 2 or 3 college students (depending on the day) don't judge us*  
-*\*I wonder how much time it's been since the last time we ever looked at this*  
+---
 
-----
-
-#### Current README.md update date: April 24, 2021
+- *This bot is not to be used in any commercial access*  
+- *We are just 2 or 3 college students (depending on the day) don't judge us*  
+- *I wonder how much time it's been since the last time we ever looked at this*
