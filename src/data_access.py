@@ -66,14 +66,14 @@ def load_dataframe():
 
 
 # Sets the time in the DataFrame
-def __set_time(user_time) -> int:
+async def __set_time(user_time) -> int:
     global df
     df['Time'] = df['Time'].replace(to_replace=user_time, value=int(time.time()))
 
  
-def calc_xp(id):
+async def calc_xp(id):
     global df
-    user_xp, user_time, user_lvl = grab_user_info(id)
+    user_xp, user_time, user_lvl = await grab_user_info(id)
 
     return sum(user_xp.values())
 
@@ -149,32 +149,32 @@ async def add_xp(id: int, server: int, amount: int = 0) -> None:
 
 # level upgrading
 async def add_lvl(id: int, amount: int = 1) -> None:
-    global df, lvls
+    global df_user_info, lvls
 
     user_xp, user_time, user_lvl = await grab_user_info(id)
 
     lvl: int = user_lvl + amount
-    df['Lvl'] = df['Lvl'].replace(to_replace=user_lvl, value=lvl)
+    df_user_info['level'] = df_user_info['level'].replace(to_replace=user_lvl, value=lvl)
 
-    lvl_xp = int(lvls.loc[lvl + 1, 0].split(',')[1])
+    lvl_xp: int = int(lvls.loc[lvl + 1, 0].split(',')[1])
 
-    server_amount = len(user_xp.keys())
+    servers: list = user_xp.keys()
 
     lvl_xp -= sum(user_xp.values())
 
-    for _ in range(server_amount):
-        x = lvl_xp // server_amount
-        add_xp(str(id), list(user_xp.keys())[_], x)
+    for _ in servers:
+        x = lvl_xp // len(servers)
+        add_xp(id, _, x)
 
-    if lvl_xp % server_amount != 0:
-        mod_amount = lvl_xp % server_amount
+    if lvl_xp % len(servers) != 0:
+        mod_amount = lvl_xp % len(servers)
         for _ in range(mod_amount):
-            add_xp(str(id), list(user_xp.keys())[_], 1)
+            add_xp(id, servers, 1)
 
     await __set_time(user_time)
-
+   
+    await save_table(df_user_info, 'User_Info')
     print('Level added and saved')
-    await save_data(df)
 
 
 # TODO: removing levels (adjusts xp accordingly) ASK ABOUT HOW TO REMOVE LEVELS
