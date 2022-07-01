@@ -41,7 +41,6 @@ def store_restricted_list(list: list):
         json.dump(list, indent=4, fp=file)
 
 
-
 async def get_network_table(network_id: int = 0) -> list: #! for future use
     engine = sa.create_engine(f'sqlite://{DB_PATH}')
     return engine.execute(f'SELECT * FROM Network_{network_id}').fetchall()
