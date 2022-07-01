@@ -65,7 +65,6 @@ with alc.begin():
 
 # ---------------------------------------------------------------
 
-user_info = server_1 = server_2 = pd.DataFrame()
 
 user_info = pd.read_sql_table('User_Info', alc)
 server_1 = pd.read_sql_table('Server_991178883682541700', alc)
