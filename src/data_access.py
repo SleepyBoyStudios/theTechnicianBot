@@ -106,8 +106,7 @@ async def add_user(user_id: int) -> None:
     try:
         await save_table(new_df=df_user_info, tbl='User_Info')
     except Exception as e:
-        print(f'Error adding user, thrown:\n{e}')
-
+        raise f'Error adding user, thrown:\n{e}' from e
     print('Done!\n')
 
 
@@ -123,7 +122,7 @@ async def del_user(id: int) -> None:
     try:
         await save_table(new_df=df_user_info, tbl='User_Info')
     except Exception as e:
-        print(f'Error deleting user, thrown: \n {e}')
+        raise f'Error deleting user, thrown: \n {e}' from e
     print('Done!\n')
 
 
