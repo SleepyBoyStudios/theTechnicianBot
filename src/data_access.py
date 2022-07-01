@@ -1,19 +1,20 @@
-# Data Storage
+
+# Imports
+
 import pandas as pd  # Database Library
-from constants import DB_PATH, CSV_NAME, LVL_LIST_PATH  # Imports constants from 'constants.py'
+from constants import DB_PATH, LVL_LIST_PATH  # Imports constants from 'constants.py'
 import random as rd  # Random Library
 import time  # Time Library
 import json  # conversion of string to dict
 import sqlalchemy as sa # Database engine
 
+# ----------------------------------------------------------------------------------------------------------------------
+
+# Helper Methods
+
 # Loads table from database
 def load_table(tbl: str = None) -> (Exception / pd.DataFrame):
     raise Exception('No table to load DataFrame from') if tbl is None else pd.read_sql_table(tbl, sa.create_engine(f'sqlite://{DB_PATH}'))
-
-
-# Saves to CSV
-def save_data(new_df: pd.DataFrame, m: str = 'w'):
-    new_df.to_csv(CSV_NAME, mode=m, index=False)
 
 
 # Saves table from database
@@ -51,24 +52,49 @@ async def get_table_names() -> list:
     inspector = sa.inspect(sa.create_engine(f'sqlite://{DB_PATH}'))
     return inspector.get_table_names()
 
+# ----------------------------------------------------------------------------------------------------------------------
 
-# Globals
+# Global Variables
+
 df_user_info = load_table(tbl='user_info')
 lvls = load_lvls()
 engine = sa.create_engine(f'sqlite://{DB_PATH}')
 network_tables = get_table_names()
 # network_table_list = get_network_tables() #! for future use
 
+# ----------------------------------------------------------------------------------------------------------------------
 
-# returns dataframe
-def load_dataframe():
-    return df
+# Accessor Methods
+
+# Gets the user's info (xp, time, & level)
+async def grab_user_info(user: int) -> tuple[dict, int, int]:
+    global df_user_info, network_tables
+
+    ids: list = df_user_info['user_ID'].tolist() # Gets a list of all the ids in the DataFrame
+    
+    select_str: str = ''
+    join_str: str = ''
+    for _ in range(len(network_tables) - 2):
+        select_str += f'{network_tables[_]}.server_xp AS {network_tables[_]}_xp, ' # Selects server_xp and aliases then to the server their xp is stored in
+        join_str += f'INNER JOIN {network_tables[_]} ON {network_tables[_]}.user_ID = User_Info.user_ID' # Joins all tables in the network together
+
+    # Check query in terminal
+    print(f'\nSELECT {select_str} FROM User_Info {join_str} WHERE User_Info.user_ID = {user}\n')
+    
+    # Runs query and stores it in a DataFrame
+    user_server_xp: pd.DataFrame = pd.read_sql_query(f'SELECT {select_str} FROM User_Info {join_str} WHERE User_Info.user_ID = {user}')
+
+    print(f'grabbed info:\n{user_server_xp}')
+
+    user_server_xp = user_server_xp.set_index('user_ID')
+    user_server_xp = user_server_xp.to_dict()
+    return user_server_xp, df_user_info['time'].tolist()[ids.index(user)], df_user_info['level'].tolist()[ids.index(user)]
 
 
 # Sets the time in the DataFrame
 async def __set_time(user_time) -> int:
-    global df
-    df['Time'] = df['Time'].replace(to_replace=user_time, value=int(time.time()))
+    global df_user_info
+    df_user_info['time'] = df_user_info['time'].replace(to_replace=user_time, value=int(time.time()))
 
 
 # Checks if the id {user_id} exists
@@ -76,8 +102,7 @@ async def id_exists(user_id) -> (int / bool):
     global df_user_info
 
     user = df_user_info.loc(await df_user_info.index(user_id))  # gets id index from DataFrame and stores it in the variable 'id_index'
-
-    # If length of the id != 0 (df.loc() is to locate)
+    
     return user if len(user) != 0 else False
 
 
@@ -187,7 +212,7 @@ async def remove_lvl(user_id, amount) -> None:
     await __set_time(user_time)
    
     try:
-        await save_data(df_user_info, 'User_Info')
+        await save_table(df_user_info, 'User_Info')
     except Exception as e:
         raise e
     print('Level removed and saved')
@@ -210,27 +235,4 @@ async def clear_lvl(id) -> None:
     print('Level added and saved')
     await save_table(df_user_info, 'User_Info')
 
-
-# Gets the user's info (xp, time, & level)
-async def grab_user_info(user: int) -> tuple[dict, int, int]:
-    global df_user_info, network_tables
-
-    ids: list = df_user_info['user_ID'].tolist() # Gets a list of all the ids in the DataFrame
-    
-    select_str: str = ''
-    join_str: str = ''
-    for _ in range(len(network_tables) - 2):
-        select_str += f'{network_tables[_]}.server_xp AS {network_tables[_]}_xp, ' # Selects server_xp and aliases then to the server their xp is stored in
-        join_str += f'INNER JOIN {network_tables[_]} ON {network_tables[_]}.user_ID = User_Info.user_ID' # Joins all tables in the network together
-
-    # Check query in terminal
-    print(f'\nSELECT {select_str} FROM User_Info {join_str} WHERE User_Info.user_ID = {user}\n')
-    
-    # Runs query and stores it in a DataFrame
-    user_server_xp: pd.DataFrame = pd.read_sql_query(f'SELECT {select_str} FROM User_Info {join_str} WHERE User_Info.user_ID = {user}')
-
-    print(f'grabbed info:\n{user_server_xp}')
-
-    user_server_xp = user_server_xp.set_index('user_ID')
-    user_server_xp = user_server_xp.to_dict()
-    return user_server_xp, df_user_info['time'].tolist()[ids.index(user)], df_user_info['level'].tolist()[ids.index(user)]
+# ----------------------------------------------------------------------------------------------------------------------
