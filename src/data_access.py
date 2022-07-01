@@ -54,7 +54,6 @@ async def get_table_names() -> list:
 
 # Globals
 df_user_info = load_table(tbl='user_info')
-df_child_table = pd.DataFrame()
 lvls = load_lvls()
 engine = sa.create_engine(f'sqlite://{DB_PATH}')
 network_tables = get_table_names()
@@ -217,20 +216,22 @@ async def clear_lvl(id) -> None:
 async def grab_user_info(user: int) -> tuple(dict, int, int):
     global df_user_info, engine, network_tables
 
-    ids: list = df_user_info['user_ID'].tolist()
-
-    total_xp = df_user_info['total_XP'][ids.index(user)] #! get server xp and parse into dict
+    ids: list = df_user_info['user_ID'].tolist() # gets a list of all the ids in the DataFrame
     
     select_str: str = ''
     join_str: str = ''
     for _ in range(len(network_tables) - 2):
-        select_str += f'{network_tables[_]}.server_xp AS {network_tables[_]}_xp, ' #! selects server_xp and aliases then to the server their xp is stored in
-        join_str += f'INNER JOIN {network_tables[_]} ON {network_tables[_]}.user_ID = User_Info.user_ID' #! joins all tables in the network together
+        select_str += f'{network_tables[_]}.server_xp AS {network_tables[_]}_xp, ' # Selects server_xp and aliases then to the server their xp is stored in
+        join_str += f'INNER JOIN {network_tables[_]} ON {network_tables[_]}.user_ID = User_Info.user_ID' # Joins all tables in the network together
 
+    # Check query in terminal
     print(f'\nSELECT User_ID, {select_str} FROM User_Info {join_str} WHERE User_Info.user_ID = {user}\n')
     
-    user_server_xp: pd.DataFrame = pd.read_sql_query(f'SELECT User_ID, {select_str} FROM User_Info {join_str} WHERE User_Info.user_ID = {user}') #! gets all of the users data
+    # Runs query and stores it in a DataFrame
+    user_server_xp: pd.DataFrame = pd.read_sql_query(f'SELECT User_ID, {select_str} FROM User_Info {join_str} WHERE User_Info.user_ID = {user}')
+
+    print(f'grabbed info:\n{user_server_xp}')
 
     user_server_xp = user_server_xp.set_index('user_ID')
-    xp_dict = user_server_xp.to_dict()
-    return xp_dict, df_user_info['time'].tolist()[ids.index(user)], df_user_info['level'].tolist()[ids.index(user)]
+    user_server_xp = user_server_xp.to_dict()
+    return user_server_xp, df_user_info['time'].tolist()[ids.index(user)], df_user_info['level'].tolist()[ids.index(user)]
