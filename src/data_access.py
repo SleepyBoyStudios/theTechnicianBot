@@ -31,22 +31,25 @@ def load_lvls() -> pd.DataFrame:
     return pd.read_csv(LVL_LIST_PATH, sep=',', header=None)
 
 
+# Load list of restricted users
 def grab_restricted_list() -> list:
     with open('restricted.json') as file:
         return json.load(file)
 
 
+# Save list of restricted users
 def store_restricted_list(list: list):
     with open('restricted.json','w') as file:
         json.dump(list, indent=4, fp=file)
 
 
+# Get main table for the network
 async def get_network_table(network_id: int = 0) -> list: #! for future use
     engine = sa.create_engine(f'sqlite://{DB_PATH}')
     return engine.execute(f'SELECT * FROM Network_{network_id}').fetchall()
 
 
-
+# Get the child table names in the network
 async def get_table_names() -> list:
     inspector = sa.inspect(sa.create_engine(f'sqlite://{DB_PATH}'))
     return inspector.get_table_names()
