@@ -177,7 +177,7 @@ async def add_lvl(id: int, amount: int = 1) -> None:
 
     lvl_xp: int = int(lvls.loc[lvl + 1, 0].split(',')[1]) # Gets the xp needed for the next level
 
-    servers: list = user_xp.keys() # Get the list of servers
+    servers: list = list(user_xp.keys()) # Get the list of servers
 
     lvl_xp -= sum(user_xp.values()) # Subtracts the total xp from the xp needed for the next level
 
