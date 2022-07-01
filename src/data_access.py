@@ -70,7 +70,7 @@ def __set_time(user_time) -> int:
     global df
     df['Time'] = df['Time'].replace(to_replace=user_time, value=int(time.time()))
 
-
+ 
 def calc_xp(id):
     global df
     user_xp, user_time, user_lvl = grab_user_info(id)
@@ -95,8 +95,8 @@ async def add_user(user_id: int) -> None:
 
     print(f'\n{data}\n')
 
-    df_user_info = await df_user_info.append(data, ignore_index=True)  # append temp DataFrame to global DataFrame
-    df_user_info = await df_user_info.head()
+    df_user_info = df_user_info.append(data, ignore_index=True)  # append temp DataFrame to global DataFrame
+    df_user_info = df_user_info.head()
 
     print(f'{df_user_info.head()}\n')
 
@@ -114,9 +114,9 @@ async def add_user(user_id: int) -> None:
 async def del_user(id: int) -> None:
     global df_user_info
 
-    df_user_info = await df_user_info.set_index('user_ID')  # Sets the Index as the ID variable
+    df_user_info = df_user_info.set_index('user_ID')  # Sets the Index as the ID variable
     df_user_info = df_user_info.head()
-    df_user_info = await df_user_info.drop(id)  # Drops the row containing the id in 'id'
+    df_user_info = df_user_info.drop(id)  # Drops the row containing the id in 'id'
 
     print(f'Dropping id: {id}... ')
     try:
@@ -127,21 +127,24 @@ async def del_user(id: int) -> None:
 
 
 # move if statement to logic.py and keep XP update here
-async def add_xp(id: int, server: str, amount: int = 0) -> None:
-    global df_user_info
-    user_xp, user_time, user_lvl = await grab_user_info(id)
+async def add_xp(id: int, server: int, amount: int = 0) -> None:
+    user_xp, user_time, user_lvl = await grab_user_info(id) # Gets user xp, time, and level
 
-    xp = await user_xp.copy()
+    xp = user_xp.copy()
     xp[server] = user_xp.get(server) + amount if amount != 0 else rd.randint(25, 50)
 
+    xp_df = await load_table(server)
 
-    df['XP'] = df['XP'].replace(to_replace=str(user_xp), value=str(xp))
+    xp_df.update(xp)
 
-    __set_time(user_time)
+    try:
+        await save_table(pd.from_dict(xp_df), tbl=f'{server}')
+    except Exception as e:
+        raise e
+    await __set_time(user_time)
 
     # Update CSV
     print('xp added')
-    await save_data(df)
 
 
 # level upgrading
@@ -213,7 +216,7 @@ async def clear_lvl(id) -> None:
 
 # Gets the user's info (xp, time, & level)
 async def grab_user_info(user: int) -> tuple(dict, int, int):
-    global df_user_info, engine, network_tables
+    global df_user_info, network_tables
 
     ids: list = df_user_info['user_ID'].tolist() # Gets a list of all the ids in the DataFrame
     
@@ -224,10 +227,10 @@ async def grab_user_info(user: int) -> tuple(dict, int, int):
         join_str += f'INNER JOIN {network_tables[_]} ON {network_tables[_]}.user_ID = User_Info.user_ID' # Joins all tables in the network together
 
     # Check query in terminal
-    print(f'\nSELECT User_ID, {select_str} FROM User_Info {join_str} WHERE User_Info.user_ID = {user}\n')
+    print(f'\nSELECT {select_str} FROM User_Info {join_str} WHERE User_Info.user_ID = {user}\n')
     
     # Runs query and stores it in a DataFrame
-    user_server_xp: pd.DataFrame = pd.read_sql_query(f'SELECT User_ID, {select_str} FROM User_Info {join_str} WHERE User_Info.user_ID = {user}')
+    user_server_xp: pd.DataFrame = pd.read_sql_query(f'SELECT {select_str} FROM User_Info {join_str} WHERE User_Info.user_ID = {user}')
 
     print(f'grabbed info:\n{user_server_xp}')
 
