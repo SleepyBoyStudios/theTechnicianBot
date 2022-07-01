@@ -70,13 +70,6 @@ async def __set_time(user_time) -> int:
     global df
     df['Time'] = df['Time'].replace(to_replace=user_time, value=int(time.time()))
 
- 
-async def calc_xp(id):
-    global df
-    user_xp, user_time, user_lvl = await grab_user_info(id)
-
-    return sum(user_xp.values())
-
 
 # Checks if the id {user_id} exists
 async def id_exists(user_id) -> (int / bool):
@@ -173,27 +166,30 @@ async def add_lvl(id: int, amount: int = 1) -> None:
 
     await __set_time(user_time)
    
-    await save_table(df_user_info, 'User_Info')
+    try:
+        await save_table(df_user_info, 'User_Info')
+    except Exception as e:
+        raise e
     print('Level added and saved')
 
 
-# TODO: removing levels (adjusts xp accordingly) ASK ABOUT HOW TO REMOVE LEVELS
 async def remove_lvl(user_id, amount) -> None:
-    global df
+    global df_user_info, lvls
 
     user_xp, user_time, user_lvl = await grab_user_info(user_id)
 
-    lvl = user_lvl - amount
-    df['Lvl'] = df['Lvl'].replace(to_replace=user_lvl, value=lvl)
-
+    lvl: int = user_lvl - amount
     xp: int = lvls.loc[lvl]
-
-    df['XP'] = df['XP'].replace(to_replace=user_xp, value=xp)
+    df_user_info['level'] = await df_user_info['level'].replace(to_replace=user_lvl, value=lvl)
+    df_user_info['total_xp'] = await df_user_info['total_xp'].replace(to_replace=user_xp, value=xp)
 
     await __set_time(user_time)
-
+   
+    try:
+        await save_data(df_user_info, 'User_Info')
+    except Exception as e:
+        raise e
     print('Level removed and saved')
-    await save_data(df)
 
 
 # clear all levels (including xp)
