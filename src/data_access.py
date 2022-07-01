@@ -8,17 +8,19 @@ import sqlalchemy as sa
 
 # Loads table from database
 def load_table(tbl: str = None) -> (Exception / pd.DataFrame):
-    return Exception('No table to load DataFrame from') if tbl is None else pd.read_sql_table(tbl, sa.create_engine(f"sqlite://{DB_PATH}"))
+    raise Exception('No table to load DataFrame from') if tbl is None else pd.read_sql_table(tbl, sa.create_engine(f"sqlite://{DB_PATH}"))
 
 # Saves to CSV
 def save_data(new_df: pd.DataFrame, m: str = 'w'):
     new_df.to_csv(CSV_NAME, mode=m, index=False)
 
 # Saves table from database
-def save_table(new_df: pd.DataFrame, tbl: str = None):
-    if tbl is None:
-        return Exception('No table to save DataFrame in') 
-    new_df.to_sql(tbl, sa.create_engine(f"sqlite://{DB_PATH}"))
+def save_table(new_df: pd.DataFrame, tbl: str = None) -> (Exception / None):
+    # sourcery skip: raise-specific-error
+    if tbl is None: raise Exception('No table to save DataFrame in')
+    engine = sa.create_engine(f"sqlite://{DB_PATH}")
+    with engine.begin():
+        new_df.to_sql(tbl, engine, if_exists='replace')
 
 # Loads levels from CSV
 def load_lvls() -> pd.DataFrame:
@@ -53,7 +55,6 @@ def __set_time(user_time) -> int:
 
 def calc_xp(id):
     global df
-
     user_xp, user_time, user_lvl = grab_user_info(id)
 
     return sum(user_xp.values())
@@ -70,7 +71,7 @@ async def id_exists(user_id) -> (int / bool):
 
 
 # Adds user to the DataFrame and to the database
-async def add_user(user_id: int):
+async def add_user(user_id: int) -> None:
     global df_user_info
     data = {"user_ID": user_id, "total_XP": 0, "level": 0, "time": 0} # Temporary 1 item DataFrame stored in 'data'
 
@@ -84,34 +85,38 @@ async def add_user(user_id: int):
     # update database
     print(f"Adding user: {user_id}... ")
 
-    e = await save_table(new_df=df_user_info, tbl='User_Info')
-    if e is not None: print(e)
+    try:
+        await save_table(new_df=df_user_info, tbl='User_Info')
+    except Exception as e:
+        print(f'Error adding user, thrown:\n{e}')
 
     print("Done!\n")
 
 
 # Deletes a user from the DataFrame and CSV
-def del_user(id):
-    global df
+async def del_user(id: int) -> None:
+    global df_user_info
 
-    df = df.set_index("ID")  # Sets the Index as the ID variable
-    df.head()
+    df_user_info = await df_user_info.set_index("user_ID")  # Sets the Index as the ID variable
+    df_user_info = df_user_info.head()
+    df_user_info = await df_user_info.drop(id)  # Drops the row containing the id in 'id'
 
-    df = df.drop(id)  # Drops the row containing the id in 'id'
-
-    print(f"Dropping id: {str(id)}... ")
-    save_data(df)  # Drops id in CSV
+    print(f"Dropping id: {id}... ")
+    try:
+        await save_table(new_df=df_user_info, tbl='User_Info')
+    except Exception as e:
+        print(f'Error deleting user, thrown: \n {e}')
     print("Done!\n")
 
 
 # move if statement to logic.py and keep XP update here
-def add_xp(id, server, amount=0):
-    global df
+async def add_xp(id: int, server: str, amount: int = 0) -> None:
+    global df_user_info
+    user_xp, user_time, user_lvl = await grab_user_info(id)
 
-    user_xp, user_time, user_lvl = grab_user_info(id)
+    xp = await user_xp.copy()
+    xp[server] = user_xp.get(server) + amount if amount != 0 else rd.randint(25, 50)
 
-    xp = user_xp.copy()
-    xp[str(server)] = (user_xp.get(str(server)) + amount if amount != 0 else rd.randint(25, 50))
 
     df["XP"] = df["XP"].replace(to_replace=str(user_xp), value=str(xp))
 
@@ -119,21 +124,19 @@ def add_xp(id, server, amount=0):
 
     # Update CSV
     print("xp added")
-    save_data(df)
+    await save_data(df)
 
 
 # level upgrading
-def add_lvl(id, amount=1):
+async def add_lvl(id: int, amount: int = 1) -> None:
     global df, lvls
 
-    user_xp, user_time, user_lvl = grab_user_info(id)
+    user_xp, user_time, user_lvl = await grab_user_info(id)
 
-    lvl = user_lvl + amount
+    lvl: int = user_lvl + amount
     df["Lvl"] = df["Lvl"].replace(to_replace=user_lvl, value=lvl)
 
-    lvl_xp = lvls.loc[int(lvl) + 1, 0]
-
-    lvl_xp = int(lvl_xp.split(",")[1])
+    lvl_xp = int(lvls.loc[lvl + 1, 0].split(",")[1])
 
     server_amount = len(user_xp.keys())
 
@@ -148,59 +151,57 @@ def add_lvl(id, amount=1):
         for _ in range(mod_amount):
             add_xp(str(id), list(user_xp.keys())[_], 1)
 
-    __set_time(user_time)
+    await __set_time(user_time)
 
     print("Level added and saved")
-    save_data(df)
+    await save_data(df)
 
 
 # TODO: removing levels (adjusts xp accordingly) ASK ABOUT HOW TO REMOVE LEVELS
-def remove_lvl(id, amount):
+async def remove_lvl(user_id, amount) -> None:
     global df
 
-    user_xp, user_time, user_lvl = grab_user_info(id)
+    user_xp, user_time, user_lvl = await grab_user_info(user_id)
 
     lvl = user_lvl - amount
     df["Lvl"] = df["Lvl"].replace(to_replace=user_lvl, value=lvl)
 
-    xp = lvls.loc[lvl]
+    xp: int = lvls.loc[lvl]
 
-    df["XP"] = df["XP"].replace(to_replace=user_xp, value=int(xp))
+    df["XP"] = df["XP"].replace(to_replace=user_xp, value=xp)
 
-    __set_time(user_time)
+    await __set_time(user_time)
 
     print("Level removed and saved")
-    save_data(df)
+    await save_data(df)
 
 
 # clear all levels (including xp)
-def clear_lvl(id):
+async def clear_lvl(id) -> None:
     global df
 
-    user_xp, user_time, user_lvl = grab_user_info(id)
+    user_xp, user_time, user_lvl = await grab_user_info(id)
 
     lvl = 0
     df["Lvl"] = df["Lvl"].replace(to_replace=user_lvl, value=lvl)
 
-    xp = user_xp.fromkeys(user_xp.iterkeys(), 0)
+    xp = await user_xp.fromkeys(user_xp.iterkeys(), 0)
     df["XP"] = df["XP"].replace(to_replace=user_xp, value=xp)
 
-    __set_time(user_time)
+    await __set_time(user_time)
 
     print("Level added and saved")
-    save_data(df)
+    await save_data(df)
 
 
 # Gets the user's info (xp, time, & level)
-def grab_user_info(user):
+async def grab_user_info(user: int) -> tuple(dict, int, int):
     global df_user_info
 
-    ids = [str(x) for x in df["user_ID"].tolist()]
+    ids = list(df_user_info["user_ID"].tolist())
 
-    xp_str = df["XP"][ids.index(str(user))]
+    xp_str = df_user_info["total_XP"][ids.index(user)] #! get server xp
+
     print(xp_str.replace("\'", '\"'))
-    xp_dict = json.loads(xp_str.replace("\'", '\"'))
-    return xp_dict, df["Time"].tolist()[ids.index(str(user))], df["Lvl"].tolist()[ids.index(str(user))]
-
-
-
+    xp_dict = await json.loads(xp_str.replace("\'", '\"'))
+    return xp_dict, df_user_info['time'].tolist()[ids.index(user)], df_user_info['level'].tolist()[ids.index(user)]
