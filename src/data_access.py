@@ -216,7 +216,7 @@ async def clear_lvl(id) -> None:
 async def grab_user_info(user: int) -> tuple(dict, int, int):
     global df_user_info, engine, network_tables
 
-    ids: list = df_user_info['user_ID'].tolist() # gets a list of all the ids in the DataFrame
+    ids: list = df_user_info['user_ID'].tolist() # Gets a list of all the ids in the DataFrame
     
     select_str: str = ''
     join_str: str = ''
