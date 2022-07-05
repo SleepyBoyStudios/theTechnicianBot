@@ -22,8 +22,9 @@ def save_table(new_df: pd.DataFrame, tbl: str = None) -> (Exception / None):
     # sourcery skip: raise-specific-error
     if tbl is None: raise Exception('No table to save DataFrame in')
     engine = sa.create_engine(f'sqlite://{DB_PATH}')
+    new_df.to_sql('temp_table', engine, if_exists='replace') # TODO: Change to keep FK and not throw errors with duplicates
     with engine.begin():
-        new_df.to_sql(tbl, engine, if_exists='replace') # TODO: Change to keep FK and not throw errors with duplicates
+        engine.execute('REPLACE INTO User_Info (SELECT * FROM temp_table)')
 
 
 # Loads levels from CSV
@@ -44,7 +45,7 @@ def store_restricted_list(list: list):
 
 
 # Get main table for the network
-async def get_network_table(network_id: int = 0) -> list: #! for future use
+async def get_network_table(network_id: int = 0) -> list: #! For future use
     engine = sa.create_engine(f'sqlite://{DB_PATH}')
     return engine.execute(f'SELECT * FROM Network_{network_id}').fetchall()
 
@@ -52,7 +53,7 @@ async def get_network_table(network_id: int = 0) -> list: #! for future use
 # Get the child table names in the network
 async def get_table_names() -> list:
     inspector = sa.inspect(sa.create_engine(f'sqlite://{DB_PATH}'))
-    return inspector.get_table_names()
+    return inspector.get_table_names() #TODO: Use network_id to get the correct tables
 
 # ----------------------------------------------------------------------------------------------------------------------
 
@@ -62,7 +63,7 @@ df_user_info = load_table(tbl='user_info')
 lvls = load_lvls()
 engine = sa.create_engine(f'sqlite://{DB_PATH}')
 network_tables = get_table_names()
-# network_table_list = get_network_tables() #! for future use
+# network_table_list = get_network_tables() #! For future use
 
 # ----------------------------------------------------------------------------------------------------------------------
 
@@ -103,7 +104,7 @@ async def __set_time(user_time) -> int:
 async def id_exists(user_id) -> (int / bool):
     global df_user_info
 
-    user = df_user_info.loc(await df_user_info.index(user_id))  # gets id index from DataFrame and stores it in the variable 'id_index'
+    user = df_user_info.loc(df_user_info.index(user_id))  # gets id index from DataFrame and stores it in the variable 'id_index'
     
     return user if len(user) != 0 else False
 
@@ -150,8 +151,8 @@ async def del_user(id: int) -> None:
 async def add_xp(id: int, server: int, amount: int = 0) -> None:
     user_xp, user_time, user_lvl = await grab_user_info(id) # Gets user xp, time, and level
 
-    xp = user_xp.copy()
-    xp[server] = user_xp.get(server) + amount if amount != 0 else rd.randint(25, 50) # Generates new xp
+    xp = await user_xp.copy()
+    xp[server] = await user_xp.get(server) + amount if amount != 0 else rd.randint(25, 50) # Generates new xp
 
     xp_df = await load_table(server) # Loads {server} into a dataframe
 
@@ -189,7 +190,7 @@ async def add_lvl(id: int, amount: int = 1) -> None:
     if lvl_xp % len(servers) != 0:
         mod_amount = lvl_xp % len(servers)
         for _ in range(mod_amount):
-            add_xp(id, servers, 1) # Adds xp to the user
+            add_xp(id, servers[_], 1) # Adds xp to the user
 
     await __set_time(user_time)
    
@@ -201,7 +202,7 @@ async def add_lvl(id: int, amount: int = 1) -> None:
 
 
 # Removes levels from the user
-async def remove_lvl(user_id, amount) -> None:
+async def remove_lvl(user_id: int, amount: int = 1) -> None:
     global df_user_info, lvls
 
     user_xp, user_time, user_lvl = await grab_user_info(user_id) # Gets user xp, time, and level
@@ -221,10 +222,10 @@ async def remove_lvl(user_id, amount) -> None:
 
 
 # Clears all levels (including xp)
-async def clear_lvl(id) -> None:
+async def clear_lvls(id) -> None:
     global df_user_info
 
-    user_xp, user_time, user_lvl = await grab_user_info(id) # Gets user xp, time, and level
+    user_xp, user_time, user_lvl = await grab_user_info(id) # Gets user xp, time, and level2
 
     lvl = 0
     df_user_info['level'] = df_user_info['level'].replace(to_replace=user_lvl, value=lvl) # Replaces the user's level with the new level

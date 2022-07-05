@@ -1,4 +1,4 @@
-import data_access as da  # data access API
+import data_access as da  # data access
 import time
 from asgiref.sync import async_to_sync
 from constants import RANK_DICT
@@ -21,11 +21,21 @@ async def check_time(id):
     return time.time() - int(user_time) <= 60
 
 
+# Adds rank to user (REQUIRES MEMBER OBJECT NOT JUST ID)
+async def promote(member, role: str) -> None:
+    await member.add_roles(role)
+
+
+# Removes rank to user (REQUIRES MEMBER OBJECT NOT JUST ID)
+async def demote(member, role: str) -> None:
+    await member.remove_roles(role)
+    
+
 # Level to a lvl
 async def lvl_to(id, lvl):
     user_xp, user_time, user_lvl = await da.grab_user_info(id)
     dlvl = lvl - user_lvl
-    await da.add_lvl(id, lvl)
+    await da.add_lvl(id, dlvl)
 
 
 # Checks rank of user and ranks up (REQUIRES AUTH OBJECT NOT JUST ID)
@@ -59,13 +69,3 @@ async def check_rank(auth, member = None) -> tuple[(str / None), bool]:
         return role_list[index], True
 
     return rank, False
-
-
-# Adds rank to user (REQUIRES MEMBER OBJECT NOT JUST ID)
-async def promote(member, role) -> None:
-    await member.add_roles(str(role))
-
-
-# Removes rank to user (REQUIRES MEMBER OBJECT NOT JUST ID)
-async def demote(member, role) -> None:
-    await member.remove_roles(str(role))
